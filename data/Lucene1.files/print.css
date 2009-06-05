@@ -1,0 +1,30 @@
+BODY {
+	FONT-SIZE: 12pt; BACKGROUND: white; FONT-FAMILY: Georgia, Palatino, serif
+}
+#tabs {
+	DISPLAY: none
+}
+#menu {
+	DISPLAY: none
+}
+#content .toc {
+	DISPLAY: none
+}
+#content {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FLOAT: none! important; PADDING-BOTTOM: 0px; WIDTH: auto; COLOR: black; PADDING-TOP: 0px
+}
+A:link {
+	COLOR: #336699; TEXT-DECORATION: underline
+}
+A:visited {
+	COLOR: #336699; TEXT-DECORATION: underline
+}
+#top .logo {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 0px 2em; PADDING-TOP: 0px
+}
+#footer {
+	MARGIN-TOP: 4em
+}
+ACRONYM {
+	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px
+}

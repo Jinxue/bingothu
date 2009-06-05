@@ -15,6 +15,15 @@
     <display-name>SearchProcess</display-name>
     <servlet-name>SearchProcess</servlet-name>
     <servlet-class>Bingo.servlet.SearchProcess</servlet-class>
+    <init-param>
+    	<param-name>indexDir</param-name>
+    	<param-value>/index/</param-value>
+    </init-param>
+    <init-param>
+    	<param-name>dataDir</param-name>
+    	<param-value>/data/</param-value>
+    </init-param>
+    
   </servlet>
   <servlet-mapping>
     <servlet-name>SearchProcess</servlet-name>

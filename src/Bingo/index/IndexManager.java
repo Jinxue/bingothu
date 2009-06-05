@@ -21,22 +21,23 @@ import Bingo.util.HTMLDocParser;
  */
 public class IndexManager {
     //the directory that stores HTML files 
-    private final String dataDir  = "c:\\dataDir";
+    private final String dataDir  = IndexConstant.dataDir;
 
     //the directory that is used to store a Lucene index
-    private final String indexDir = "c:\\indexDir";
+    private final String indexDir = IndexConstant.indexDir;
 
     /**
      * create index
+     * @throws Exception 
      */
-    public boolean createIndex() throws IOException{
+    public boolean createIndex() throws Exception{
         if(true == ifIndexExist()){
             return true;	
         }
         File dir = new File(dataDir);
-        if(!dir.exists()){
-            return false;
-        }
+        if(!dir.exists())
+			throw new Exception(" Data directory is not existed!");
+
         File[] htmls = dir.listFiles();
         //Directory fsDirectory = FSDirectory.getDirectory(indexDir, true);
         Analyzer  analyzer    = new StandardAnalyzer();
@@ -75,9 +76,14 @@ public class IndexManager {
 
     /**
      * judge if the index exists already
+     * @throws Exception 
      */
-    public boolean ifIndexExist(){
+    public boolean ifIndexExist() throws Exception{
         File directory = new File(indexDir);
+        System.out.println(System.getProperty("user.dir"));
+        if (!directory.exists())
+			throw new Exception(" Index directory is not existed!");
+
         if(0 < directory.listFiles().length){
             return true;
         }else{
