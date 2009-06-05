@@ -9,4 +9,14 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>SearchProcess</display-name>
+    <servlet-name>SearchProcess</servlet-name>
+    <servlet-class>Bingo.servlet.SearchProcess</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SearchProcess</servlet-name>
+    <url-pattern>/SearchProcess</url-pattern>
+  </servlet-mapping>
 </web-app>
