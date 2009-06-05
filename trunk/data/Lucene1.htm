@@ -1,0 +1,258 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0055)http://lucene.apache.org/java/2_4_1/gettingstarted.html -->
+<HTML><HEAD><TITLE>Apache Lucene - Getting Started Guide</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=UTF-8">
+<META content="MSHTML 6.00.2900.3527" name=GENERATOR>
+<META content=0.8 name=Forrest-version>
+<META content=pelt name=Forrest-skin-name><LINK href="Lucene1.files/basic.css" 
+type=text/css rel=stylesheet><LINK media=screen href="Lucene1.files/screen.css" 
+type=text/css rel=stylesheet><LINK media=print href="Lucene1.files/print.css" 
+type=text/css rel=stylesheet><LINK href="Lucene1.files/profile.css" 
+type=text/css rel=stylesheet>
+<SCRIPT language=javascript src="Lucene1.files/getBlank.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT language=javascript src="Lucene1.files/getMenu.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT language=javascript src="Lucene1.files/fontsize.js" 
+type=text/javascript></SCRIPT>
+<LINK href="images/favicon.ico" rel="shortcut icon"></HEAD>
+<BODY onload=init()>
+<SCRIPT type=text/javascript>ndeSetTextSize();</SCRIPT>
+
+<DIV id=top><!--+
+    |breadtrail
+    +-->
+<DIV class=breadtrail><A href="http://www.apache.org/">Apache</A> &gt; <A 
+href="http://lucene.apache.org/">Lucene</A>
+<SCRIPT language=JavaScript src="Lucene1.files/breadcrumbs.js" 
+type=text/javascript></SCRIPT>
+ </DIV><!--+
+    |header
+    +-->
+<DIV class=header><!--+
+    |start group logo
+    +-->
+<DIV class=grouplogo><A href="http://lucene.apache.org/"><IMG class=logoImage 
+title="Apache Lucene" alt=Lucene src="Lucene1.files/asf_logo_simple.png"></A> 
+</DIV><!--+
+    |end group logo
+    +--><!--+
+    |start Project Logo
+    +-->
+<DIV class=projectlogo><A href="http://lucene.apache.org/java/"><IMG 
+class=logoImage 
+title="Apache Lucene is a high-performance, full-featured text search engine library written entirely in&#10;      Java. It is a technology suitable for nearly any application that requires full-text search, especially cross-platform." 
+alt=Lucene src="Lucene1.files/lucene_green_300.gif"></A> </DIV><!--+
+    |end Project Logo
+    +--><!--+
+    |start Search
+    +-->
+<DIV class=searchbox>
+<FORM class=roundtopsmall action=http://www.google.com/search method=get><INPUT 
+type=hidden value=lucene.apache.org name=sitesearch><INPUT id=query 
+onfocus="getBlank (this, 'Search the site with google');" size=25 
+value="Search the site with google" name=q>&nbsp; <INPUT type=submit value=Search name=Search> </FORM></DIV><!--+
+    |end search
+    +--><!--+
+    |start Tabs
+    +-->
+<UL id=tabs>
+  <LI class=current><A class=selected 
+  href="http://lucene.apache.org/java/docs/">Main</A> </LI>
+  <LI><A class=unselected href="http://wiki.apache.org/lucene-java">Wiki</A> 
+  </LI>
+  <LI class=current><A class=selected 
+  href="http://lucene.apache.org/java/2_4_1/index.html">Lucene 2.4.1 
+  Documentation</A> </LI></UL><!--+
+    |end Tabs
+    +--></DIV></DIV>
+<DIV id=main>
+<DIV id=publishedStrip><!--+
+    |start Subtabs
+    +-->
+<DIV id=level2tabs></DIV><!--+
+    |end Endtabs
+    +-->
+<SCRIPT type=text/javascript><!--
+document.write("Last Published: " + document.lastModified);
+//  --></SCRIPT>
+</DIV><!--+
+    |breadtrail
+    +-->
+<DIV class=breadtrail> </DIV><!--+
+    |start Menu, mainarea
+    +--><!--+
+    |start Menu
+    +-->
+<DIV id=menu>
+<DIV class=menutitle id=menu_selected_1.1Title 
+style="BACKGROUND-IMAGE: url(skin/images/chapter_open.gif)" 
+onclick="SwitchMenu('menu_selected_1.1', 'skin/')">Documentation</DIV>
+<DIV class=selectedmenuitemgroup id=menu_selected_1.1 style="DISPLAY: block">
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/index.html">Overview</A> </DIV>
+<DIV class=menutitle id=menu_1.1.2Title 
+onclick="SwitchMenu('menu_1.1.2', 'skin/')">Javadocs</DIV>
+<DIV class=menuitemgroup id=menu_1.1.2>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/index.html">All</A> </DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/core/index.html">Core</A> </DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/demo/index.html">Demo</A> </DIV>
+<DIV class=menutitle id=menu_1.1.2.4Title 
+onclick="SwitchMenu('menu_1.1.2.4', 'skin/')">Contrib</DIV>
+<DIV class=menuitemgroup id=menu_1.1.2.4>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-analyzers/index.html">Analyzers</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-ant/index.html">Ant</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-bdb/index.html">Bdb</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-bdb-je/index.html">Bdb-je</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-benchmark/index.html">Benchmark</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-highlighter/index.html">Highlighter</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-instantiated/index.html">Instantiated</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-lucli/index.html">Lucli</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-memory/index.html">Memory</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-misc/index.html">Miscellaneous</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-queries/index.html">Queries</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-regex/index.html">Regex</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-snowball/index.html">Snowball</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-spellchecker/index.html">Spellchecker</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-surround/index.html">Surround</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-swing/index.html">Swing</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-wikipedia/index.html">Wikipedia</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-wordnet/index.html">Wordnet</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/api/contrib-xml-query-parser/index.html">XML 
+Query Parser</A> </DIV></DIV></DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/benchmarks.html">Benchmarks</A> </DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/contributions.html">Contributions</A> 
+</DIV>
+<DIV class=menuitem><A 
+href="http://wiki.apache.org/lucene-java/LuceneFAQ">FAQ</A> </DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/fileformats.html">File Formats</A> 
+</DIV>
+<DIV class=menupage>
+<DIV class=menupagetitle>Getting Started</DIV></DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/lucene-sandbox/index.html">Lucene 
+Sandbox</A> </DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/queryparsersyntax.html">Query 
+Syntax</A> </DIV>
+<DIV class=menuitem><A 
+href="http://lucene.apache.org/java/2_4_1/scoring.html">Scoring</A> </DIV>
+<DIV class=menuitem><A href="http://wiki.apache.org/lucene-java">Wiki</A> 
+</DIV></DIV>
+<DIV id=credit></DIV>
+<DIV id=roundbottom><IMG class=corner style="DISPLAY: none" height=15 alt="" 
+src="Lucene1.files/rc-b-l-15-1body-2menu-3menu.png" width=15></DIV><!--+
+  |alternative credits
+  +-->
+<DIV id=credit2></DIV></DIV><!--+
+    |end Menu
+    +--><!--+
+    |start content
+    +-->
+<DIV id=content>
+<DIV class=pdflink title="Portable Document Format"><A class=dida 
+href="http://lucene.apache.org/java/2_4_1/gettingstarted.pdf"><IMG class=skin 
+alt="PDF -icon" src="Lucene1.files/pdfdoc.gif"><BR>PDF</A> </DIV>
+<H1>Apache Lucene - Getting Started Guide </H1>
+<DIV id=minitoc-area>
+<UL class=minitoc>
+  <LI><A 
+  href="http://lucene.apache.org/java/2_4_1/gettingstarted.html#Getting Started">Getting 
+  Started</A> </LI></UL></DIV><A name=N10013></A><A name="Getting Started"></A>
+<H2 class=boxed>Getting Started</H2>
+<DIV class=section>
+<P>This document is intended as a "getting started" guide. It has three 
+audiences: first-time users looking to install Apache Lucene in their 
+application or web server; developers looking to modify or base the applications 
+they develop on Lucene; and developers looking to become involved in and 
+contribute to the development of Lucene. This document is written in tutorial 
+and walk-through format. The goal is to help you "get started". It does not go 
+into great depth on some of the conceptual or inner details of Lucene. </P>
+<P>Each section listed below builds on one another. More advanced users may wish 
+to skip sections. </P>
+<UL>
+  <LI><A href="http://lucene.apache.org/java/2_4_1/demo.html">About the 
+  command-line Lucene demo and its usage</A>. This section is intended for 
+  anyone who wants to use the command-line Lucene demo. 
+  <P></P>
+  <LI><A href="http://lucene.apache.org/java/2_4_1/demo2.html">About the sources 
+  and implementation for the command-line Lucene demo</A>. This section walks 
+  through the implementation details (sources) of the command-line Lucene demo. 
+  This section is intended for developers. 
+  <P></P>
+  <LI><A href="http://lucene.apache.org/java/2_4_1/demo3.html">About installing 
+  and configuring the demo template web application</A>. While this walk-through 
+  assumes Tomcat as your container of choice, there is no reason you can't 
+  (provided you have the requisite knowledge) adapt the instructions to your 
+  container. This section is intended for those responsible for the development 
+  or deployment of Lucene-based web applications. 
+  <P></P>
+  <LI><A href="http://lucene.apache.org/java/2_4_1/demo4.html">About the sources 
+  used to construct the demo template web application</A>. Please note the 
+  template application is designed to highlight features of Lucene and is 
+  <B>not</B> an example of best practices. (One would hopefully use MVC 
+  architecture such as provided by Jakarta Struts and taglibs, but showing you 
+  how to do that would be WAY beyond the scope of this guide.) This section is 
+  intended for developers and those wishing to customize the demo template web 
+  application to their needs. </LI></UL></DIV></DIV><!--+
+    |end content
+    +-->
+<DIV class=clearboth>&nbsp;</DIV></DIV>
+<DIV id=footer><!--+
+    |start bottomstrip
+    +-->
+<DIV class=lastmodified>
+<SCRIPT type=text/javascript><!--
+document.write("Last Published: " + document.lastModified);
+//  --></SCRIPT>
+</DIV>
+<DIV class=copyright>Copyright © 2006 <A 
+href="http://www.apache.org/licenses/">The Apache Software Foundation.</A> 
+</DIV><!--+
+    |end bottomstrip
+    +--></DIV></BODY></HTML>

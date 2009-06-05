@@ -1,0 +1,132 @@
+IMG {
+	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px
+}
+#content TABLE {
+	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; WIDTH: 100%; BORDER-RIGHT-WIDTH: 0px
+}
+ HTML #content TABLE {
+	MARGIN-LEFT: -3px
+}
+#content TH {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; VERTICAL-ALIGN: top; PADDING-TOP: 0px
+}
+#content TD {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; VERTICAL-ALIGN: top; PADDING-TOP: 0px
+}
+.clearboth {
+	CLEAR: both
+}
+.note {
+	BORDER-RIGHT: black 1px solid; BORDER-TOP: black 1px solid; MARGIN: 1em 3em; BORDER-LEFT: black 1px solid; BORDER-BOTTOM: black 1px solid
+}
+.warning {
+	BORDER-RIGHT: black 1px solid; BORDER-TOP: black 1px solid; MARGIN: 1em 3em; BORDER-LEFT: black 1px solid; BORDER-BOTTOM: black 1px solid
+}
+.fixme {
+	BORDER-RIGHT: black 1px solid; BORDER-TOP: black 1px solid; MARGIN: 1em 3em; BORDER-LEFT: black 1px solid; BORDER-BOTTOM: black 1px solid
+}
+.note .label {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-WEIGHT: bold; BACKGROUND: #369; PADDING-BOTTOM: 5px; COLOR: white; PADDING-TOP: 5px
+}
+.note .content {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: 90%; BACKGROUND: #f0f0ff; PADDING-BOTTOM: 5px; COLOR: black; LINE-HEIGHT: 120%; PADDING-TOP: 5px
+}
+.warning .label {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-WEIGHT: bold; BACKGROUND: #c00; PADDING-BOTTOM: 5px; COLOR: white; PADDING-TOP: 5px
+}
+.warning .content {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: 90%; BACKGROUND: #fff0f0; PADDING-BOTTOM: 5px; COLOR: black; LINE-HEIGHT: 120%; PADDING-TOP: 5px
+}
+.fixme .label {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-WEIGHT: bold; BACKGROUND: #c6c600; PADDING-BOTTOM: 5px; COLOR: black; PADDING-TOP: 5px
+}
+.fixme .content {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 5px; PADDING-TOP: 5px
+}
+BODY {
+	FONT-SIZE: 100%; FONT-FAMILY: verdana, "Trebuchet MS", arial, helvetica, sans-serif
+}
+#content {
+	FONT-SIZE: 95%; FONT-FAMILY: Georgia, Palatino, Times, serif
+}
+#tabs {
+	FONT-SIZE: 70%
+}
+#menu {
+	FONT-SIZE: 80%
+}
+#footer {
+	FONT-SIZE: 70%
+}
+H1 {
+	MARGIN-TOP: 1em; FONT-WEIGHT: bold; MARGIN-BOTTOM: 0.5em; FONT-FAMILY: "Trebuchet MS", verdana, arial, helvetica, sans-serif
+}
+H2 {
+	MARGIN-TOP: 1em; FONT-WEIGHT: bold; MARGIN-BOTTOM: 0.5em; FONT-FAMILY: "Trebuchet MS", verdana, arial, helvetica, sans-serif
+}
+H3 {
+	MARGIN-TOP: 1em; FONT-WEIGHT: bold; MARGIN-BOTTOM: 0.5em; FONT-FAMILY: "Trebuchet MS", verdana, arial, helvetica, sans-serif
+}
+H4 {
+	MARGIN-TOP: 1em; FONT-WEIGHT: bold; MARGIN-BOTTOM: 0.5em; FONT-FAMILY: "Trebuchet MS", verdana, arial, helvetica, sans-serif
+}
+H5 {
+	MARGIN-TOP: 1em; FONT-WEIGHT: bold; MARGIN-BOTTOM: 0.5em; FONT-FAMILY: "Trebuchet MS", verdana, arial, helvetica, sans-serif
+}
+H6 {
+	MARGIN-TOP: 1em; FONT-WEIGHT: bold; MARGIN-BOTTOM: 0.5em; FONT-FAMILY: "Trebuchet MS", verdana, arial, helvetica, sans-serif
+}
+H1 {
+	MARGIN-TOP: 0px; FONT-SIZE: 1.4em; MARGIN-BOTTOM: 1em
+}
+#content H1 {
+	FONT-SIZE: 160%; MARGIN-BOTTOM: 0.5em
+}
+#menu H1 {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; BACKGROUND: #336699; PADDING-BOTTOM: 10px; MARGIN: 0px; COLOR: white; PADDING-TOP: 10px
+}
+H2 {
+	FONT-SIZE: 120%
+}
+H3 {
+	FONT-SIZE: 100%
+}
+H4 {
+	FONT-SIZE: 90%
+}
+H5 {
+	FONT-SIZE: 80%
+}
+H6 {
+	FONT-SIZE: 75%
+}
+P {
+	MARGIN-TOP: 0.5em; MARGIN-BOTTOM: 1em; LINE-HEIGHT: 120%; TEXT-ALIGN: left
+}
+#content LI {
+	MARGIN-TOP: 0.5em; MARGIN-BOTTOM: 0.5em
+}
+#content TH {
+	MARGIN-TOP: 0.5em; MARGIN-BOTTOM: 0.5em
+}
+#content TD {
+	MARGIN-TOP: 0.5em; MARGIN-BOTTOM: 0.5em
+}
+#content LI UL {
+	MARGIN-TOP: 0.5em; MARGIN-BOTTOM: 0.5em
+}
+#content LI OL {
+	MARGIN-TOP: 0.5em; MARGIN-BOTTOM: 0.5em
+}
+#content LI LI {
+	MARGIN-TOP: 0em; MARGIN-BOTTOM: 0em
+}
+#minitoc-area LI {
+	MARGIN-TOP: 0em; MARGIN-BOTTOM: 0em
+}
+#content .attribution {
+	MARGIN-TOP: 1em; FONT-SIZE: 85%; FONT-STYLE: italic; TEXT-ALIGN: right
+}
+.codefrag {
+	FONT-SIZE: 110%; FONT-FAMILY: "Courier New", Courier, monospace
+}

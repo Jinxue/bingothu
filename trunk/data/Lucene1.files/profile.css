@@ -1,0 +1,274 @@
+
+@media Aural    
+{
+H1 {
+	voice-family: paul, male; stress: 20; richness: 90
+}
+H2 {
+	voice-family: paul, male; stress: 20; richness: 90
+}
+H3 {
+	voice-family: paul, male; stress: 20; richness: 90
+}
+H4 {
+	voice-family: paul, male; stress: 20; richness: 90
+}
+H5 {
+	voice-family: paul, male; stress: 20; richness: 90
+}
+H6 {
+	voice-family: paul, male; stress: 20; richness: 90
+}
+H1 {
+	pitch: x-low; pitch-range: 90
+}
+H2 {
+	pitch: x-low; pitch-range: 80
+}
+H3 {
+	pitch: low; pitch-range: 70
+}
+H4 {
+	pitch: medium; pitch-range: 60
+}
+H5 {
+	pitch: medium; pitch-range: 50
+}
+H6 {
+	pitch: medium; pitch-range: 40
+}
+LI {
+	richness: 60; pitch: medium
+}
+DT {
+	richness: 60; pitch: medium
+}
+DD {
+	richness: 60; pitch: medium
+}
+DT {
+	stress: 80
+}
+PRE {
+	stress: 0; richness: 80; pitch: medium; pitch-range: 0
+}
+CODE {
+	stress: 0; richness: 80; pitch: medium; pitch-range: 0
+}
+TT {
+	stress: 0; richness: 80; pitch: medium; pitch-range: 0
+}
+EM {
+	stress: 60; richness: 50; pitch: medium; pitch-range: 60
+}
+STRONG {
+	stress: 90; richness: 90; pitch: medium; pitch-range: 60
+}
+DFN {
+	stress: 60; pitch: high; pitch-range: 60
+}
+S {
+	richness: 0
+}
+STRIKE {
+	richness: 0
+}
+I {
+	stress: 60; richness: 50; pitch: medium; pitch-range: 60
+}
+B {
+	stress: 90; richness: 90; pitch: medium; pitch-range: 60
+}
+U {
+	richness: 0
+}
+:link {
+	voice-family: harry, male
+}
+:visited {
+	voice-family: betty, female
+}
+:active {
+	voice-family: betty, female; pitch: x-high; pitch-range: 80
+}
+    }
+A.external {
+	PADDING-RIGHT: 20px; BACKGROUND-POSITION: right center; DISPLAY: inline; PADDING-LEFT: 0px; BACKGROUND-IMAGE: url(images/external-link.gif); PADDING-BOTTOM: 0px; PADDING-TOP: 0px; BACKGROUND-REPEAT: no-repeat
+}
+#top {
+	BACKGROUND-COLOR: #ffffff
+}
+#top .header .current {
+	BACKGROUND-COLOR: #4c6c8f
+}
+#top .header .current A:link {
+	COLOR: #ffffff
+}
+#top .header .current A:visited {
+	COLOR: #ffffff
+}
+#top .header .current A:hover {
+	COLOR: #ffffff
+}
+#tabs LI {
+	BACKGROUND-COLOR: #e5e4d9
+}
+#tabs LI A:link {
+	COLOR: #000000
+}
+#tabs LI A:visited {
+	COLOR: #000000
+}
+#tabs LI A:hover {
+	COLOR: #000000
+}
+#level2tabs A.selected {
+	BACKGROUND-COLOR: #4c6c8f
+}
+#level2tabs A:link {
+	COLOR: #ffffff
+}
+#level2tabs A:visited {
+	COLOR: #ffffff
+}
+#level2tabs A:hover {
+	COLOR: #ffffff
+}
+#level2tabs {
+	BACKGROUND-COLOR: #e5e4d9
+}
+#level2tabs A.unselected:link {
+	COLOR: #000000
+}
+#level2tabs A.unselected:visited {
+	COLOR: #000000
+}
+#level2tabs A.unselected:hover {
+	COLOR: #000000
+}
+.heading {
+	BACKGROUND-COLOR: #e5e4d9
+}
+.boxed {
+	BACKGROUND-COLOR: #e5e4d9
+}
+.underlined_5 {
+	BORDER-BOTTOM: #e5e4d9 5px solid
+}
+.underlined_10 {
+	BORDER-BOTTOM: #e5e4d9 10px solid
+}
+TABLE CAPTION {
+	COLOR: #000000; BACKGROUND-COLOR: #e5e4d9
+}
+#feedback {
+	BACKGROUND: #4c6c8f; COLOR: #ffffff; TEXT-ALIGN: center
+}
+#feedback #feedbackto {
+	COLOR: #ffffff
+}
+#publishedStrip {
+	BACKGROUND: #4c6c8f; COLOR: #ffffff
+}
+#publishedStrip {
+	BACKGROUND: #e5e4d9; COLOR: #000000
+}
+#menu .menupagetitle {
+	COLOR: #000000; BACKGROUND-COLOR: #cfdced
+}
+#menu {
+	BORDER-LEFT-COLOR: #999999; BORDER-BOTTOM-COLOR: #999999; BORDER-TOP-COLOR: #999999; BORDER-RIGHT-COLOR: #999999
+}
+#menu .menupagetitle {
+	BORDER-LEFT-COLOR: #999999; BORDER-BOTTOM-COLOR: #999999; BORDER-TOP-COLOR: #999999; BORDER-RIGHT-COLOR: #999999
+}
+#menu .menupageitemgroup {
+	BORDER-LEFT-COLOR: #999999; BORDER-BOTTOM-COLOR: #999999; BORDER-TOP-COLOR: #999999; BORDER-RIGHT-COLOR: #999999
+}
+#menu {
+	BACKGROUND-COLOR: #4c6c8f
+}
+#menu {
+	COLOR: #ffffff
+}
+#menu A:link {
+	COLOR: #ffffff
+}
+#menu A:visited {
+	COLOR: #ffffff
+}
+#menu A:hover {
+	COLOR: #ffffff; BACKGROUND-COLOR: #4c6c8f
+}
+#menu H1 {
+	COLOR: #000000; BACKGROUND-COLOR: #cfdced
+}
+#top .searchbox {
+	COLOR: #000000; BACKGROUND-COLOR: #e5e4d9
+}
+#menu .menupageitemgroup {
+	BACKGROUND-COLOR: #e5e4d9
+}
+#menu .menupageitem {
+	COLOR: #000000
+}
+#menu .menupageitem A:link {
+	COLOR: #000000
+}
+#menu .menupageitem A:visited {
+	COLOR: #000000
+}
+#menu .menupageitem A:hover {
+	COLOR: #000000; BACKGROUND-COLOR: #e5e4d9
+}
+BODY {
+	COLOR: #000000; BACKGROUND-COLOR: #ffffff
+}
+A:link {
+	COLOR: #0000ff
+}
+A:visited {
+	COLOR: #009999
+}
+A:hover {
+	COLOR: #6587ff
+}
+.ForrestTable {
+	BACKGROUND-COLOR: #ccc
+}
+.ForrestTable TD {
+	BACKGROUND-COLOR: #ffffff
+}
+.highlight {
+	BACKGROUND-COLOR: #ffff00
+}
+.fixme {
+	BORDER-LEFT-COLOR: #c60; BORDER-BOTTOM-COLOR: #c60; BORDER-TOP-COLOR: #c60; BORDER-RIGHT-COLOR: #c60
+}
+.note {
+	BORDER-LEFT-COLOR: #069; BORDER-BOTTOM-COLOR: #069; BORDER-TOP-COLOR: #069; BORDER-RIGHT-COLOR: #069
+}
+.warning {
+	BORDER-LEFT-COLOR: #900; BORDER-BOTTOM-COLOR: #900; BORDER-TOP-COLOR: #900; BORDER-RIGHT-COLOR: #900
+}
+.code {
+	BORDER-LEFT-COLOR: #a5b6c6; BORDER-BOTTOM-COLOR: #a5b6c6; BORDER-TOP-COLOR: #a5b6c6; BORDER-RIGHT-COLOR: #a5b6c6
+}
+#footer {
+	BACKGROUND-COLOR: #e5e4d9
+}
+P.quote {
+	PADDING-RIGHT: 0.5em; PADDING-LEFT: 0.5em; PADDING-BOTTOM: 0.5em; MARGIN-LEFT: 2em; PADDING-TOP: 0.5em; FONT-FAMILY: monospace; BACKGROUND-COLOR: #f0f0f0
+}
+IMG.float-right {
+	PADDING-RIGHT: 0.5em; PADDING-LEFT: 0.5em; FLOAT: right; PADDING-BOTTOM: 0.5em; MARGIN-LEFT: 2em; PADDING-TOP: 0.5em
+}
+#footer A {
+	COLOR: #0f3660
+}
+#footer A:visited {
+	COLOR: #009999
+}
+PRE.code {
+	PADDING-RIGHT: 0.5em; PADDING-LEFT: 0.5em; PADDING-BOTTOM: 0.5em; MARGIN-LEFT: 2em; MARGIN-RIGHT: 2em; PADDING-TOP: 0.5em; BACKGROUND-COLOR: #f0f0f0
+}

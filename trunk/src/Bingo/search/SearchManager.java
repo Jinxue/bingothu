@@ -28,8 +28,9 @@ public class SearchManager {
     
     /**
      * do search
+     * @throws Exception 
      */
-    public ArrayList<SearchResultBean> search(){
+    public ArrayList<SearchResultBean> search() throws Exception{
     	ArrayList<SearchResultBean> searchResult = new ArrayList<SearchResultBean> ();
         if(false == indexManager.ifIndexExist()){
         try {
