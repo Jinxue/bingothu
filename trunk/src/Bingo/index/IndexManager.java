@@ -12,8 +12,6 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 
 import Bingo.util.HTMLDocParser;
 
@@ -40,9 +38,9 @@ public class IndexManager {
             return false;
         }
         File[] htmls = dir.listFiles();
-        Directory fsDirectory = FSDirectory.getDirectory(indexDir, true);
+        //Directory fsDirectory = FSDirectory.getDirectory(indexDir, true);
         Analyzer  analyzer    = new StandardAnalyzer();
-        IndexWriter indexWriter = new IndexWriter(fsDirectory, analyzer, true);
+        IndexWriter indexWriter = new IndexWriter(indexDir, analyzer, true, IndexWriter.MaxFieldLength.LIMITED);
         for(int i = 0; i < htmls.length; i++){
             String htmlPath = htmls[i].getAbsolutePath();
 
@@ -53,7 +51,6 @@ public class IndexManager {
         indexWriter.optimize();
         indexWriter.close();
         return true;
-
     }
 
     /**
@@ -67,7 +64,7 @@ public class IndexManager {
 
         Document document = new Document();
         document.add(new Field("path",path,Field.Store.YES,Field.Index.NO));
-        document.add(new Field("title",title,Field.Store.YES,Field.Index.TOKENIZED));
+        document.add(new Field("title",title,Field.Store.YES,Field.Index.ANALYZED));
         document.add(new Field("content",content));
         try {
               indexWriter.addDocument(document);
