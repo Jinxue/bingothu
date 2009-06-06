@@ -7,28 +7,31 @@ import org.htmlparser.Parser;
 import org.htmlparser.filters.AndFilter;
 import org.htmlparser.filters.HasAttributeFilter;
 import org.htmlparser.filters.HasChildFilter;
+import org.htmlparser.filters.LinkRegexFilter;
 import org.htmlparser.filters.OrFilter;
 import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.nodes.TagNode;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
-public class YoukuFilter implements VideoWebsiteFilterInterface{
+public class YoukuFilter extends VideoWebsiteFilterInterface{
 	
-	private NodeFilter linkFilter = new AndFilter(
-					            new NodeFilter[]{
-					                	  new TagNameFilter("a"),  
-					                	  new HasChildFilter(
-					                			  new TagNameFilter("img")),
-					                	//  new LinkRegexFilter("http://v.youku.com/v_show/.*")
-					                	  new HasAttributeFilter("target","video")
-					                  });
-	
-	private NodeFilter infoFilter = new AndFilter(
-							            new NodeFilter[]{
-							            		new TagNameFilter("meta"),
-							            		new HasAttributeFilter("name")
-							            });
+	public YoukuFilter()
+	{
+		linkFilter = new AndFilter(
+			            new NodeFilter[]{
+			                	  new TagNameFilter("a"),  
+			                	  new HasChildFilter(
+			                			  new TagNameFilter("img")),					                	
+			                	  new HasAttributeFilter("target","video")
+			                  });
+
+        infoFilter = new AndFilter(
+			            new NodeFilter[]{
+			            		new TagNameFilter("meta"),
+			            		new HasAttributeFilter("name")
+			            });
+	}
 	
 	public NodeFilter getLinksFilter()
 	{
@@ -40,11 +43,6 @@ public class YoukuFilter implements VideoWebsiteFilterInterface{
 		return infoFilter ;
 	}
 	
-	public NodeList getNodeList(Parser parser) throws ParserException
-	{
-		return parser.parse(linkFilter);
-	}
-	
 	public VideoInfo getVideoInfo(Parser parser, String linkUrl, String imgUrl) throws ParserException
 	{
 		VideoInfo videoInfo = new VideoInfo();
@@ -54,11 +52,11 @@ public class YoukuFilter implements VideoWebsiteFilterInterface{
     	{
     		String name = ((TagNode)nodes.elementAt(i)).getAttribute("name");
     		String content = ((TagNode)nodes.elementAt(i)).getAttribute("content");
-    		if(name.equals("title"))
+    		if(name.compareToIgnoreCase("title")==0)
     			videoInfo.setTitle(content);
-    		else if(name.equals("keywords"))
+    		else if(name.compareToIgnoreCase("keywords")==0)
     			videoInfo.setKeyWord(content);
-    		else if(name.equals("description"))
+    		else if(name.compareToIgnoreCase("description")==0)
     			videoInfo.setDescription(content);
     	}
     	videoInfo.setUrl(linkUrl);

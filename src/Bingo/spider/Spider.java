@@ -3,6 +3,7 @@ package Bingo.spider ;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +24,7 @@ public class Spider implements Runnable
     
     Map<String,String> imgLinkMap = new HashMap<String,String>();  // for temp
     
-    static LinkedList<VideoInfo> videoInfoList = new LinkedList<VideoInfo>();
+//    static LinkedList<VideoInfo> videoInfoList = new LinkedList<VideoInfo>();
     
     static IndexManager indexManager;
     
@@ -35,19 +36,21 @@ public class Spider implements Runnable
     
     public Spider(VideoWebsiteFilterInterface vwFilter)
     {
-    	this.vwFilter = vwFilter;
+    	Spider.vwFilter = vwFilter;
     }
     
     public Spider()
     {
-    	this.vwFilter = new YoukuFilter();    
+    	Spider.vwFilter = new YoukuFilter();    
     }
 	
     public static void main(String[] args) throws Exception{
-	   	Spider spider = new Spider();
+    	
+//	   	Spider spider = new Spider();  // for youku
+	   	Spider spider = new Spider(new TudouFilter()); //for Tudou
 	   	indexManager = new IndexManager("E:\\Eclipse_workespace-jee\\Bingo\\index");
 	   	spider.run();
-	   	indexManager.closeIndex();
+	   	indexManager.closeIndex();    	
      }
     
     public void run()
@@ -58,49 +61,47 @@ public class Spider implements Runnable
     	{
     		String nextLink = (String)queue.removeFirst();
    // 		System.out.println(nextLink);
-    		System.out.println(linkNum); 
+    		
    		    try {
-				parseHtml(nextLink, vwFilter.getLinksFilter());
+				
+   		    	
+   		    	parseHtml(nextLink);
+   		    	System.out.println(linkNum); 
+				
 			} catch (CorruptIndexException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	}
     	System.out.println("*****************************************************");
-    	System.out.println(linkNum); 
+    	System.out.println(linkNum);     	
+    
     }
     
-    protected VideoInfo getInfo(String url, LinkedList<String> queue)
-    {
-    	
-		return null;    	
-    }
-    
-    protected void parseHtml (String url , NodeFilter videoLinkFilter) throws CorruptIndexException, IOException
+    protected void parseHtml (String url ) throws CorruptIndexException, IOException
     {
     	try {    		
 			parser.setURL(url);
 			VideoInfo videoInfo = getMoreInfo(parser,url);
-			getMoreLinks(parser,videoLinkFilter);			
+			getMoreLinks(url , parser);			
+			
+		
 			
 			if(videoInfo != null)
 			{
-				System.out.println(videoInfo.toString());
+	//      	System.out.println("**** video Info : "+ videoInfo.toString());
 				
 				// Put the index file to indexed DB
 				indexManager.addIndex(videoInfo);
 				
-				synchronized(videoInfoList){
+	/*			synchronized(videoInfoList){
 					videoInfoList.add(videoInfo);
-				}				
+				}		*/		
 				++linkNum;
 			}			
 			
 		} catch (ParserException e) {
-			// TODO Auto-generated catch block
 			System.out.println(url);
 			e.printStackTrace();
 		}
@@ -112,20 +113,22 @@ public class Spider implements Runnable
      * @param videoLinkFilter
      * @throws ParserException
      */
-    protected void getMoreLinks(Parser parser,NodeFilter videoLinkFilter) throws ParserException
+    protected void getMoreLinks(String currentUrl , Parser parser) throws ParserException
     {
     	parser.reset();
-    	NodeList nodes = vwFilter.getNodeList(parser);
-    	for(int i=0;i<nodes.size();++i)
+    	Map<String , String> linkToImgLink = vwFilter.getLinkAndImgLink(currentUrl , parser);
+        Set<String> keySet = linkToImgLink.keySet();
+    	for(Iterator<String> it = keySet.iterator(); it.hasNext();)
     	{
-//    		System.out.println(nodes.elementAt(i).toHtml());
-    		String link = ((TagNode)nodes.elementAt(i)).getAttribute("href");
-//   		    System.out.println(link);
+    		String link = it.next();    		
+    		
     		if(!visitedURL.contains(link))
     		{
-    			String imgLink = ((TagNode)nodes.elementAt(i).getFirstChild()).getAttribute("src");
-//    			System.out.println(imgLink);
-    			imgLinkMap.put(link, imgLink);
+    			String imgLink = linkToImgLink.get(link);
+//        		System.out.println(link+"\n"+imgLink);
+        		
+    			imgLinkMap.put(link, imgLink);    			
+    			
     			queue.add(link);
     		}
     	}
@@ -146,13 +149,13 @@ public class Spider implements Runnable
     	return null ;
     }
     
-    public static VideoInfo getVideoInfo()
+ /*   public static VideoInfo getVideoInfo()
     {
     	synchronized(videoInfoList){
     		if(videoInfoList.size()!=0)
     			return videoInfoList.removeFirst();
     		return null;
     	}
-    }
+    } */
 } 
 

@@ -2,33 +2,39 @@ package Bingo.spider ;
 
 import java.util.LinkedList;
 
+import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.AndFilter;
 import org.htmlparser.filters.HasAttributeFilter;
 import org.htmlparser.filters.HasChildFilter;
+import org.htmlparser.filters.LinkRegexFilter;
 import org.htmlparser.filters.OrFilter;
 import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.nodes.TagNode;
+import org.htmlparser.tags.ImageTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
-public class TudouFilter implements VideoWebsiteFilterInterface{
+public class TudouFilter extends VideoWebsiteFilterInterface{
 	
-	private NodeFilter linkFilter = new AndFilter(
-					            new NodeFilter[]{
-					                	  new TagNameFilter("a"),  
-					                	  new HasChildFilter(
-					                			  new TagNameFilter("img")),
-					                	//  new LinkRegexFilter("http://v.youku.com/v_show/.*")
-					                	  new HasAttributeFilter("target","video")
-					                  });
-	
-	private NodeFilter infoFilter = new AndFilter(
-							            new NodeFilter[]{
-							            		new TagNameFilter("meta"),
-							            		new HasAttributeFilter("name")
-							            });
+	public TudouFilter()
+	{
+		linkFilter = new AndFilter(
+			            new NodeFilter[]{
+			                	  new TagNameFilter("a"),  
+			                	  new HasChildFilter(
+			                			  new TagNameFilter("img")),
+			                	  new LinkRegexFilter(".*tudou.com/.*")
+			                  });
+
+       infoFilter = new OrFilter(
+			            new NodeFilter[]{
+			            		new AndFilter(new TagNameFilter("meta"),
+					            		      new HasAttributeFilter("name")),
+					            new TagNameFilter("title")
+			            });
+	}
 	
 	public NodeFilter getLinksFilter()
 	{
@@ -42,22 +48,30 @@ public class TudouFilter implements VideoWebsiteFilterInterface{
 	
 	public VideoInfo getVideoInfo(Parser parser, String linkUrl, String imgUrl) throws ParserException
 	{
-		VideoInfo videoInfo = new VideoInfo();
-		NodeFilter filter = infoFilter; 
-		NodeList nodes = parser.parse(filter);
+		VideoInfo videoInfo = new VideoInfo();	
+		NodeList nodes = parser.parse(infoFilter);
     	for(int i=0;i<nodes.size();++i)
     	{
-    		String name = ((TagNode)nodes.elementAt(i)).getAttribute("name");
-    		String content = ((TagNode)nodes.elementAt(i)).getAttribute("content");
-    		if(name.equals("title"))
-    			videoInfo.setTitle(content);
-    		else if(name.equals("keywords"))
-    			videoInfo.setKeyWord(content);
-    		else if(name.equals("description"))
-    			videoInfo.setDescription(content);
+    		TagNode tagNode = (TagNode)nodes.elementAt(i);
+//    		System.out.println(tagNode.getTagName());
+    		if(tagNode.getTagName().compareToIgnoreCase("meta")==0)
+    		{
+    			String name = tagNode.getAttribute("name");
+        		String content = tagNode.getAttribute("content");
+        		if(name.compareToIgnoreCase("keywords")==0)
+        			videoInfo.setKeyWord(content);
+        		else if(name.compareToIgnoreCase("description")==0)
+        			videoInfo.setDescription(content);
+    		}
+    		else if(tagNode.getTagName().compareToIgnoreCase("title")==0)
+    		{
+    			videoInfo.setTitle(tagNode.getFirstChild().getText());
+    		}
     	}
     	videoInfo.setUrl(linkUrl);
     	videoInfo.setImgUrl(imgUrl);
+    	
+//   	System.out.println(videoInfo.toString());
     	
     	return videoInfo;
     	
@@ -65,12 +79,67 @@ public class TudouFilter implements VideoWebsiteFilterInterface{
 	
 	public String getEnterPointURL()
 	{
-		return "http://www.youku.com/";
+		return "http://www.tudou.com/";
+	}	
+	
+	protected String getImgLinkFromImgTag(TagNode tagNode)
+	{
+/*		String imgClass = tagNode.getAttribute("class");
+		if(imgClass != null)
+		{
+			if(isDelayImg(imgClass))
+				return tagNode.getAttribute("alt");			
+		}	
+		return tagNode.getAttribute("src");		*/
+		String src = tagNode.getAttribute("src");
+		String alt = tagNode.getAttribute("alt");
+		if(src != null && isEndWith(src,".jpg"))
+			return src ;
+		if(alt != null && isEndWith(alt,".jpg"))
+			return alt ;
+		return null ;
 	}
-
+	
+	private boolean isEndWith(String str , String subStr)
+	{
+		
+		if(str.indexOf(subStr, str.length() - subStr.length())==-1)
+			return false;
+		return true ;
+	}
+/*	private boolean isDelayImg (String imgClass)
+	{
+	    if(imgClass.indexOf("delayImg") != -1)
+	    	return true ;
+	    return false;
+	} */
+	
 	@Override
-	public NodeList getNodeList(Parser parser) throws ParserException {
-		// TODO Auto-generated method stub
-		return null;
+	protected String getNormalURL(String base, String rel)
+	{
+		int countOfSep = 0;
+		for(int k = 0 ; k< rel.length();++k)
+		{
+			if(rel.charAt(k)=='/')
+				++countOfSep ;
+		}
+		
+		int j = 0;
+		for(j = base.length() - 1 ; j>=0 ; --j)
+		{
+		    if(base.charAt(j)=='/')
+		    {
+		    	--countOfSep ;
+		    	if(countOfSep == 0)
+		    		break ;
+		    }
+		}
+		
+		if(j>=0)
+		{
+			return base.substring(0, j) + rel ;
+		}
+		
+		return base ;	
 	}
 }
