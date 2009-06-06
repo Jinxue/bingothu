@@ -40,9 +40,9 @@ public class VideoInfo {
 	}
 	
 	public String toString(){
-		return  url + "->" +imgUrl+"\n"
-		                   +title+"\n"
-		                   +keyWord+"\n"
-		                   +description+"\n";
+		return  url + "\n ->" +imgUrl+"\n ->"
+		                   +title+"\n ->"
+		                   +keyWord+"\n ->"
+		                   +description+"\n ->";
 	}
 }
