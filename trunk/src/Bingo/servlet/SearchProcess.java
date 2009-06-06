@@ -48,7 +48,13 @@ public class SearchProcess extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String searchWord = request.getParameter("searchWord");
-		SearchManager searchManager = new SearchManager(searchWord);
+		SearchManager searchManager = null;
+		try {
+			searchManager = new SearchManager(searchWord);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		ArrayList<VideoInfo> searchResult = null;
 	    try {
 			searchResult = searchManager.search();

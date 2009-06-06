@@ -1,15 +1,19 @@
 package Bingo.spider ;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.lucene.index.CorruptIndexException;
 import org.htmlparser.*;
 import org.htmlparser.nodes.TagNode;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
+
+import Bingo.index.IndexManager;
 
 public class Spider implements Runnable
 {
@@ -19,7 +23,9 @@ public class Spider implements Runnable
     
     Map<String,String> imgLinkMap = new HashMap<String,String>();  // for temp
     
-    static LinkedList<VideoInfo> videoInfoList = new LinkedList<VideoInfo>(); 
+    static LinkedList<VideoInfo> videoInfoList = new LinkedList<VideoInfo>();
+    
+    static IndexManager indexManager;
     
     int linkNum = 0;
     
@@ -37,10 +43,11 @@ public class Spider implements Runnable
     	this.vwFilter = new YoukuFilter();    
     }
 	
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
 	   	Spider spider = new Spider();
+	   	indexManager = new IndexManager("E:\\Eclipse_workespace-jee\\Bingo\\index");
 	   	spider.run();
-   	
+	   	indexManager.closeIndex();
      }
     
     public void run()
@@ -52,7 +59,15 @@ public class Spider implements Runnable
     		String nextLink = (String)queue.removeFirst();
    // 		System.out.println(nextLink);
     		System.out.println(linkNum); 
-   		    parseHtml(nextLink, vwFilter.getLinksFilter());
+   		    try {
+				parseHtml(nextLink, vwFilter.getLinksFilter());
+			} catch (CorruptIndexException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
     	System.out.println("*****************************************************");
     	System.out.println(linkNum); 
@@ -64,7 +79,7 @@ public class Spider implements Runnable
 		return null;    	
     }
     
-    protected void parseHtml (String url , NodeFilter videoLinkFilter)
+    protected void parseHtml (String url , NodeFilter videoLinkFilter) throws CorruptIndexException, IOException
     {
     	try {    		
 			parser.setURL(url);
@@ -74,6 +89,10 @@ public class Spider implements Runnable
 			if(videoInfo != null)
 			{
 				System.out.println(videoInfo.toString());
+				
+				// Put the index file to indexed DB
+				indexManager.addIndex(videoInfo);
+				
 				synchronized(videoInfoList){
 					videoInfoList.add(videoInfo);
 				}				

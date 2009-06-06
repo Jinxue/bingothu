@@ -8,11 +8,14 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.cn.ChineseAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 
+import Bingo.spider.VideoInfo;
 import Bingo.util.HTMLDocParser;
 
 /**
@@ -21,16 +24,57 @@ import Bingo.util.HTMLDocParser;
  */
 public class IndexManager {
     //the directory that stores HTML files 
-    private final String dataDir  = IndexConstant.dataDir;
+    private String dataDir  = IndexConstant.dataDir;
 
     //the directory that is used to store a Lucene index
-    private final String indexDir = IndexConstant.indexDir;
+    private String indexDir = IndexConstant.indexDir;
+    
+    // The index writer
+    private IndexWriter indexWriter;
+    
+    //The index directory 
+    public IndexManager() throws Exception{
+    	initIndexManager();
+    }
+    
+    //The index directory 
+    public IndexManager(String indexDir) throws Exception{
+    	this.indexDir = indexDir;
+    	initIndexManager();
+    }
+    
+    private void initIndexManager() throws Exception{
+    	if(ifIndexExist() == true){
+    		return;
+    	}
+        Analyzer  analyzer    = new ChineseAnalyzer();
+        indexWriter = new IndexWriter(indexDir, analyzer, true, IndexWriter.MaxFieldLength.LIMITED);
+    }
+
+    // Insert the index to index DB
+    public void addIndex(VideoInfo videoInfo) throws CorruptIndexException, IOException{
+        Document document = new Document();
+        document.add(new Field("keyWord",videoInfo.getKeyWord(),Field.Store.YES,Field.Index.NOT_ANALYZED));
+        document.add(new Field("title",videoInfo.getTitle(),Field.Store.YES,Field.Index.ANALYZED));
+        document.add(new Field("description",videoInfo.getDescription(),Field.Store.YES,Field.Index.ANALYZED));
+        try {
+              indexWriter.addDocument(document);
+        } catch (IOException e) {
+              e.printStackTrace();
+        }
+        indexWriter.optimize();
+    }
+    
+    // Close the Index manager
+    public void closeIndex() throws CorruptIndexException, IOException{
+    	indexWriter.close();
+    }
 
     /**
-     * create index
+     * create index form local directory
      * @throws Exception 
      */
-    public boolean createIndex() throws Exception{
+    public boolean createIndexFromLocal() throws Exception{
         if(true == ifIndexExist()){
             return true;	
         }
@@ -84,7 +128,8 @@ public class IndexManager {
         if (!directory.exists())
 			throw new Exception(" Index directory is not existed!");
 
-        if(0 < directory.listFiles().length){
+        // We must exclude the .svn directory
+        if(1 < directory.listFiles().length){
             return true;
         }else{
             return false;
