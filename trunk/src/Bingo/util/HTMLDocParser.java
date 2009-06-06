@@ -29,7 +29,7 @@ public class HTMLDocParser {
         }
         if(null != inputStream){
 	        try {
-                htmlParser = new HTMLParser(new InputStreamReader(inputStream, "utf-8"));
+                htmlParser = new HTMLParser(new InputStreamReader(inputStream, "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }

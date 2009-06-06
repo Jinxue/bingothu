@@ -67,4 +67,10 @@ public class TudouFilter implements VideoWebsiteFilterInterface{
 	{
 		return "http://www.youku.com/";
 	}
+
+	@Override
+	public NodeList getNodeList(Parser parser) throws ParserException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

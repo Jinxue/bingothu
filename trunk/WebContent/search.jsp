@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="Bingo.search.SearchResultBean" %>    
+<%@ page import="Bingo.spider.VideoInfo" %>    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -32,22 +32,22 @@
 	<TABLE>
 		<TBODY>
 		<%
-			ArrayList<SearchResultBean> searchResult = (ArrayList)request.getAttribute("searchResult");
+			ArrayList<VideoInfo> searchResult = (ArrayList)request.getAttribute("searchResult");
 			int resultCount = 0;
 			if(null != searchResult){
 				resultCount = searchResult.size();
 			}
 			for (int i = 0; i < resultCount; i ++){
-				SearchResultBean resultBean = (SearchResultBean) searchResult.get(i);
+				VideoInfo resultBean = (VideoInfo) searchResult.get(i);
 				String title = resultBean.getTitle();
 				String desc = resultBean.getDescription();
 				String url = resultBean.getUrl();
-				String imageFileName = resultBean.getImageFileName();
+				String imageUrl = resultBean.getImgUrl();
 		%>
 			<TR>
 				<TD>
 					<A href="<%=url %>"><%=title %></A>
-					<p><%=desc %></p>
+					<!-- p><%=desc %></p-->
 				</TD>
 			</TR>
 			<TR><TD><HR /></TD></TR>

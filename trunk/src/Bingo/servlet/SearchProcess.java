@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import Bingo.index.IndexConstant;
 import Bingo.search.SearchManager;
-import Bingo.search.SearchResultBean;
+import Bingo.spider.VideoInfo;
 
 /**
  * Servlet implementation class SearchProcess
@@ -49,7 +49,7 @@ public class SearchProcess extends HttpServlet {
 		// TODO Auto-generated method stub
 		String searchWord = request.getParameter("searchWord");
 		SearchManager searchManager = new SearchManager(searchWord);
-		ArrayList<SearchResultBean> searchResult = null;
+		ArrayList<VideoInfo> searchResult = null;
 	    try {
 			searchResult = searchManager.search();
 		} catch (Exception e) {
