@@ -57,6 +57,9 @@ public class IndexManager {
         document.add(new Field("keyWord",videoInfo.getKeyWord(),Field.Store.YES,Field.Index.NOT_ANALYZED));
         document.add(new Field("title",videoInfo.getTitle(),Field.Store.YES,Field.Index.ANALYZED));
         document.add(new Field("description",videoInfo.getDescription(),Field.Store.YES,Field.Index.ANALYZED));
+        document.add(new Field("url", videoInfo.getUrl(), Field.Store.YES, Field.Index.NO));
+        document.add(new Field("imgUrl", videoInfo.getImgUrl(), Field.Store.YES, Field.Index.NO));
+        
         try {
               indexWriter.addDocument(document);
         } catch (IOException e) {
