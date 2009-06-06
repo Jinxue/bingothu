@@ -24,7 +24,7 @@ public class SearchManager {
     
     private Analyzer analyzer;
     
-    public SearchManager(String searchWord){
+    public SearchManager(String searchWord) throws Exception{
         this.searchWord   =  searchWord;
         this.indexManager =  new IndexManager();
         this.analyzer     =  new StandardAnalyzer();
@@ -38,7 +38,7 @@ public class SearchManager {
     	ArrayList<VideoInfo> searchResult = new ArrayList<VideoInfo> ();
         if(false == indexManager.ifIndexExist()){
         try {
-            if(false == indexManager.createIndex()){
+            if(false == indexManager.createIndexFromLocal()){
                 return searchResult;
             }
         } catch (IOException e) {
