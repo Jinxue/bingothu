@@ -14,6 +14,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.FSDirectory;
 
 import Bingo.spider.VideoInfo;
 import Bingo.util.HTMLDocParser;
@@ -47,14 +48,15 @@ public class IndexManager {
     	if(ifIndexExist() == true){
     		return;
     	}
+    	FSDirectory dir = FSDirectory.getDirectory(new File(indexDir));
         Analyzer  analyzer    = new ChineseAnalyzer();
-        indexWriter = new IndexWriter(indexDir, analyzer, true, IndexWriter.MaxFieldLength.LIMITED);
+        indexWriter = new IndexWriter(dir, analyzer, true, IndexWriter.MaxFieldLength.LIMITED);
     }
 
     // Insert the index to index DB
     public void addIndex(VideoInfo videoInfo) throws CorruptIndexException, IOException{
         Document document = new Document();
-        document.add(new Field("keyWord",videoInfo.getKeyWord(),Field.Store.YES,Field.Index.NOT_ANALYZED));
+        document.add(new Field("keyWord",videoInfo.getKeyWord(),Field.Store.YES,Field.Index.ANALYZED));
         document.add(new Field("title",videoInfo.getTitle(),Field.Store.YES,Field.Index.ANALYZED));
         document.add(new Field("description",videoInfo.getDescription(),Field.Store.YES,Field.Index.ANALYZED));
         document.add(new Field("url", videoInfo.getUrl(), Field.Store.YES, Field.Index.NO));

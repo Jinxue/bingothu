@@ -57,6 +57,7 @@ public class Spider implements Runnable
     {
     	queue.add(vwFilter.getEnterPointURL());
     	
+    	//while((!queue.isEmpty()) && (linkNum < 100))	//We just want to exit normally
     	while(!queue.isEmpty())
     	{
     		String nextLink = (String)queue.removeFirst();
