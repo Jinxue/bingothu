@@ -15,6 +15,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
 import Bingo.index.IndexManager;
+import Bingo.spider.VideoInfo;
 
 public class SearchManager {
     private String searchWord;
@@ -33,8 +34,8 @@ public class SearchManager {
      * do search
      * @throws Exception 
      */
-    public ArrayList<SearchResultBean> search() throws Exception{
-    	ArrayList<SearchResultBean> searchResult = new ArrayList<SearchResultBean> ();
+    public ArrayList<VideoInfo> search() throws Exception{
+    	ArrayList<VideoInfo> searchResult = new ArrayList<VideoInfo> ();
         if(false == indexManager.ifIndexExist()){
         try {
             if(false == indexManager.createIndex()){
@@ -65,7 +66,7 @@ public class SearchManager {
             try {
                 ScoreDoc[] hits = indexSearcher.search(query,null,100).scoreDocs;
                 for(int i = 0; i < hits.length; i ++){
-                    SearchResultBean resultBean = new SearchResultBean();
+                	VideoInfo resultBean = new VideoInfo();
                     Document hitDoc = indexSearcher.doc(hits[i].doc);
                     resultBean.setUrl(hitDoc.get("path"));
                     resultBean.setTitle(hitDoc.get("title"));
