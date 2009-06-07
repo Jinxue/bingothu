@@ -111,8 +111,8 @@ public class Spider implements Runnable {
 			getMoreLinks(filter, url, parser);
 
 			if (videoInfo != null) {
-				 System.out.println("**** video Info : "+
-				 videoInfo.toString());
+//				 System.out.println("**** video Info : "+
+//				 videoInfo.toString());
 
 				// Put the index file to indexed DB
 				indexManager.addIndex(videoInfo);
