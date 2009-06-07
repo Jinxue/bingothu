@@ -150,8 +150,10 @@ public class Spider implements Runnable {
 				String imgLink = linkToImgLink.get(link);
 				// System.out.println(link+"\n"+imgLink);
 
+				visitedURL.add(link);
+				
 				imgLinkMap.put(link, imgLink);
-
+				
 				queue.add(link);
 			}
 		}
