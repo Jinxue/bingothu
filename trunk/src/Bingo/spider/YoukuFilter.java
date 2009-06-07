@@ -46,6 +46,7 @@ public class YoukuFilter extends VideoWebsiteFilterInterface{
 	public VideoInfo getVideoInfo(Parser parser, String linkUrl, String imgUrl) throws ParserException
 	{
 		VideoInfo videoInfo = new VideoInfo();
+		videoInfo.setSource("Youku");
 		NodeFilter filter = infoFilter; 
 		NodeList nodes = parser.parse(filter);
     	for(int i=0;i<nodes.size();++i)

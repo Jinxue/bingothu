@@ -48,7 +48,8 @@ public class TudouFilter extends VideoWebsiteFilterInterface{
 	
 	public VideoInfo getVideoInfo(Parser parser, String linkUrl, String imgUrl) throws ParserException
 	{
-		VideoInfo videoInfo = new VideoInfo();	
+		VideoInfo videoInfo = new VideoInfo();
+		videoInfo.setSource("Tudou");
 		NodeList nodes = parser.parse(infoFilter);
     	for(int i=0;i<nodes.size();++i)
     	{

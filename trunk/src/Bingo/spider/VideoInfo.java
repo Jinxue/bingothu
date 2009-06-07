@@ -2,11 +2,12 @@ package Bingo.spider ;
 
 public class VideoInfo {
 	
-	private String  imgUrl;
-	private String  url;
-	private String  title;
-	private String  keyWord;
-	private String  description;
+	private String  imgUrl = new String();
+	private String  url = new String();
+	private String  title = new String();
+	private String  keyWord = new String();
+	private String  description = new String();
+	private String 	source = new String();	// From which 
 	
 	public String getImgUrl() {
 		return imgUrl;
@@ -43,6 +44,19 @@ public class VideoInfo {
 		return  url + "\n ->" +imgUrl+"\n ->"
 		                   +title+"\n ->"
 		                   +keyWord+"\n ->"
-		                   +description+"\n ->";
+		                   +description+"\n ->"
+		                   + "From " + source+"\n ->";
+	}
+	/**
+	 * @param source the source to set
+	 */
+	public void setSource(String source) {
+		this.source = source;
+	}
+	/**
+	 * @return the source
+	 */
+	public String getSource() {
+		return source;
 	}
 }
