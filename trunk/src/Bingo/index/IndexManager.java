@@ -61,6 +61,7 @@ public class IndexManager {
         document.add(new Field("description",videoInfo.getDescription(),Field.Store.YES,Field.Index.ANALYZED));
         document.add(new Field("url", videoInfo.getUrl(), Field.Store.YES, Field.Index.NO));
         document.add(new Field("imgUrl", videoInfo.getImgUrl(), Field.Store.YES, Field.Index.NO));
+        document.add(new Field("source", videoInfo.getSource(), Field.Store.YES, Field.Index.NO));
         
         try {
               indexWriter.addDocument(document);
