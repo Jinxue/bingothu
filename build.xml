@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+
+<project name="Bingo" default="package" basedir=".">
+
+	<!-- Load all the default properties, and any the user wants    -->
+	<!-- to contribute (without having to type -D or edit this file -->
+	<property file="${basedir}/default.properties" />
+
+	<patternset id="excluding.package">
+		<exclude name="Bingo/servlet/"/>
+		<exclude name="Bingo/search/" />
+		<exclude name="Bingo/util/" />
+		<exclude name="org/" />
+	</patternset>	
+
+	<!-- the normal classpath -->
+	<path id="classpath">
+		<pathelement location="${bin.classes}" />
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<!-- ====================================================== -->
+	<!-- Stuff needed by all targets                            -->
+	<!-- ====================================================== -->
+	<target name="init">
+	</target>
+
+	<!-- ====================================================== -->
+	<!-- Compile the Java files                                 -->
+	<!-- ====================================================== -->
+	<target name="compile" depends="init">
+		<delete dir="${bin.dir}" />
+		<mkdir dir="${bin.dir}" />		
+
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.6">
+			<classpath refid="classpath" />
+			<patternset refid="excluding.package" />
+		</javac>
+	</target>
+
+	<!-- ================================================================== -->
+	<!-- Create manifest file                                               -->
+	<!-- ================================================================== -->
+	<!--                                                                    -->
+	<!-- ================================================================== -->
+	<target name="create.manifest" description="create menifest file">
+	        <manifest file="${manifest.file}">
+	            <attribute name="Main-Class" value="Bingo.spider.Spider" />
+	        </manifest>
+	    </target>
+
+	
+	<!-- ================================================================== -->
+	<!-- Make Lime.jar                                                   -->
+	<!-- ================================================================== -->
+	<!--                                                                    -->
+	<!-- ================================================================== -->
+	<target name="myjar" depends="compile">
+		<jar destfile="${bin.dir}/${final.name}.jar" basedir="${bin.classes}"
+			manifest="manifest.txt"	/>
+	</target>
+
+	<!-- ================================================================== -->
+	<!-- D I S T R I B U T I O N                                            -->
+	<!-- ================================================================== -->
+	<!--                                                                    -->
+	<!-- ================================================================== -->
+	<target name="package" depends="myjar">
+		<delete dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}/lib" />
+		<mkdir dir="${dist.dir}/classes" />
+
+		<copy todir="${dist.dir}/lib" includeEmptyDirs="false">
+			<fileset dir="${lib.dir}" />
+		</copy>
+
+		<copy file="${bin.dir}/${final.name}.jar" todir="${dist.dir}" />
+		<delete file="${bin.dir}/${final.name}.jar" />
+
+		<copy todir="${dist.dir}/classes">
+			<fileset dir="${bin.dir}" />
+		</copy>
+
+		<copy todir="${dist.dir}">
+			<fileset dir=".">
+				<include name="*.bat" />
+				<include name="*.txt" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${dist.dir}/" file="build.xml" />
+		<copy todir="${dist.dir}/" file="default.properties" />
+	</target>
+
+	<!-- ================================================================== -->
+	<!-- Clean.  Delete the build files, and their directories              -->
+	<!-- ================================================================== -->
+	<target name="clean">
+		<delete dir="${dist.dir}" />
+
+		<exec executable="rm">
+			<arg value="-f" />
+			<arg value="${final.name}.jar" />
+		</exec>
+	</target>
+
+	<!-- test run project -->
+	<!--target name="run">
+	</target-->
+
+</project>
