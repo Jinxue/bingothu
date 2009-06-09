@@ -1,0 +1,3 @@
+Manifest-Version: 0.9
+Main-Class: Bingo.spider.Spider
+Class-Path: ./lib/htmlparser.jar ./lib/lucene-core-2.4.1.jar
