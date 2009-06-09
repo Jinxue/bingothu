@@ -10,8 +10,6 @@ import java.util.Set;
 
 import org.apache.lucene.index.CorruptIndexException;
 import org.htmlparser.*;
-import org.htmlparser.nodes.TagNode;
-import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
 import Bingo.index.IndexManager;
