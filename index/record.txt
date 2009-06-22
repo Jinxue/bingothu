@@ -1,0 +1,2 @@
+Youku: 1000000, 12hour
+Tudou: 37000, 14hour
