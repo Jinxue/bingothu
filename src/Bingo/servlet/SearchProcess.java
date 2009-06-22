@@ -40,11 +40,12 @@ public class SearchProcess extends HttpServlet {
 		// directory = getServletContext().getRealPath("/");
 		// Set the directory for data and index
 		String root = config.getServletContext().getRealPath("/");
-		// IndexConstant.indexDir = root + config.getInitParameter("indexDir");
+		 
+		IndexConstant.indexDir = root + config.getInitParameter("indexDir");
 
 		// IndexConstant.dataDir = root + config.getInitParameter("dataDir");
 
-		IndexConstant.indexDir = "E:\\Eclipse_workespace-jee\\Bingo\\index-OK-tudou-youku-10000each";
+//		IndexConstant.indexDir = "E:\\Eclipse_workespace-jee\\Bingo\\index-OK-tudou-youku-10000each";
 	}
 
 	/**
