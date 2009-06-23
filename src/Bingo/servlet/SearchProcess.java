@@ -1,9 +1,11 @@
 package Bingo.servlet;
 
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
@@ -43,7 +45,7 @@ public class SearchProcess extends HttpServlet {
 		 
 		IndexConstant.indexDir = root + config.getInitParameter("indexDir");
 
-		// IndexConstant.dataDir = root + config.getInitParameter("dataDir");
+		IndexConstant.dataDir = root + config.getInitParameter("dataDir");
 
 //		IndexConstant.indexDir = "E:\\Eclipse_workespace-jee\\Bingo\\index-OK-tudou-youku-10000each";
 	}
@@ -97,7 +99,10 @@ public class SearchProcess extends HttpServlet {
 		SearchManager searchManager = null;
 		ArrayList<VideoInfo> searchResult = new ArrayList<VideoInfo>();
 		
-		String xmlContent = new String("<?xml version='1.0' encoding='UTF-8'?>".getBytes(), "UTF-8");   
+		String xmlContent = new String("<?xml version='1.0' encoding='UTF-8'?>".getBytes(), "UTF-8");
+//		String xmlContent = new String("");
+//		xmlContent += "<?xml version='1.0' encoding='UTF-8'?>";
+		
         response.setContentType("text/xml;charset=UTF-8");   
         PrintWriter out = response.getWriter();   
 
@@ -118,9 +123,11 @@ public class SearchProcess extends HttpServlet {
 			// return the data in XML format
 			// Also write it to a file
 			System.out.println(System.getProperty("user.dir"));
-			File file = new File("./results.xml");
-			DataOutputStream outs = new DataOutputStream(
-		               new FileOutputStream(file));
+			File file = new File(IndexConstant.dataDir, "results.xml");
+			FileOutputStream fos = new FileOutputStream(file);
+//			DataOutputStream outs = new DataOutputStream(
+//		               new FileOutputStream(file));
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));   
 			
 			xmlContent += "<items>";
 			if(!searchResult.isEmpty()){
@@ -130,21 +137,23 @@ public class SearchProcess extends HttpServlet {
 									"</keyword><description>" + item.getDescription() +
 									"</description><imageurl>" + item.getImgUrl() +
 									"</imageurl><url>" + item.getUrl() +
-									//"</url><source>" + item.getSource() + 
-									//"</source></item>";
+//									"</url><source>" + item.getSource() + 
+//									"</source></item>";
 									"</url></item>";
 				}
 			}
 			xmlContent += "</items>";
 			
-			outs.writeUTF(xmlContent);
-			
+//			outs.writeUTF(xmlContent);
+			bw.write(xmlContent);
 			
 			out.print(xmlContent);
 			out.flush();
 			out.close();
 			
-			outs.close();
+//			outs.close();
+			bw.close();
+			fos.close();
 		}
 	}
 }
