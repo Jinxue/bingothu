@@ -13,6 +13,10 @@
 		<exclude name="org/" />
 	</patternset>	
 
+	<patternset id="web.excluding.package">
+		<exclude name="classes/Bingo/util/" />
+	</patternset>	
+	
 	<!-- the normal classpath -->
 	<path id="classpath">
 		<pathelement location="${bin.classes}" />
@@ -62,12 +66,29 @@
 			manifest="manifest.txt"	/>
 	</target>
 
+ 	<target name="mywar">
+ 		<echo>"${basedir}"</echo>
+ 		<copy todir="${web.dest.dir}">
+ 			<fileset dir="${web.bin.dir}">
+ 				<patternset refid="web.excluding.package" />
+ 			</fileset>
+ 		</copy>
+ 		<!-- copy todir="${web.src.dir}"><fileset dir="${src.dir}"></fileset></copy-->
+ 		<war destfile="${bin.dir}/${name}.war"
+   			basedir="${web.dir}"
+   			webxml="${web.dir}/WEB-INF/web.xml" 
+   			manifest="${web.dir}/META-INF/MANIFEST.MF"
+   		>
+ 		</war>
+ 		
+ 	</target>
+	
 	<!-- ================================================================== -->
 	<!-- D I S T R I B U T I O N                                            -->
 	<!-- ================================================================== -->
 	<!--                                                                    -->
 	<!-- ================================================================== -->
-	<target name="package" depends="myjar">
+	<target name="package" depends="myjar, mywar">
 		<delete dir="${dist.dir}" />
 		<mkdir dir="${dist.dir}" />
 		<mkdir dir="${dist.dir}/lib" />
@@ -77,9 +98,12 @@
 			<fileset dir="${lib.dir}" />
 		</copy>
 
+		<copy file="${bin.dir}/${name}.war" todir="${dist.dir}" />
+		<delete file="${bin.dir}/${name}.war" />
+
 		<copy file="${bin.dir}/${final.name}.jar" todir="${dist.dir}" />
 		<delete file="${bin.dir}/${final.name}.jar" />
-
+		
 		<copy todir="${dist.dir}/classes">
 			<fileset dir="${bin.dir}" />
 		</copy>
