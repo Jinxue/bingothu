@@ -43,11 +43,12 @@ public class SearchProcess extends HttpServlet {
 		// Set the directory for data and index
 		String root = config.getServletContext().getRealPath("/");
 		 
-		IndexConstant.indexDir = root + config.getInitParameter("indexDir");
+//		IndexConstant.indexDir = root + config.getInitParameter("indexDir");
+//
+//		IndexConstant.dataDir = root + config.getInitParameter("dataDir");
 
-		IndexConstant.dataDir = root + config.getInitParameter("dataDir");
-
-//		IndexConstant.indexDir = "E:\\Eclipse_workespace-jee\\Bingo\\index-OK-tudou-youku-10000each";
+		IndexConstant.indexDir = "E:\\Eclipse_workespace-jee\\Bingo\\index";
+		IndexConstant.dataDir = "E:\\Eclipse_workespace-jee\\Bingo\\data";
 	}
 
 	/**
@@ -100,6 +101,8 @@ public class SearchProcess extends HttpServlet {
 		ArrayList<VideoInfo> searchResult = new ArrayList<VideoInfo>();
 		
 		String xmlContent = new String("<?xml version='1.0' encoding='UTF-8'?>".getBytes(), "UTF-8");
+		String youkuContent = new String();
+		String tudouContent = new String();
 //		String xmlContent = new String("");
 //		xmlContent += "<?xml version='1.0' encoding='UTF-8'?>";
 		
@@ -127,12 +130,15 @@ public class SearchProcess extends HttpServlet {
 			FileOutputStream fos = new FileOutputStream(file);
 //			DataOutputStream outs = new DataOutputStream(
 //		               new FileOutputStream(file));
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));   
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8"));   
 			
 			xmlContent += "<items>";
+			
+//			String content = null;
 			if(!searchResult.isEmpty()){
 				for(VideoInfo item: searchResult){
-					xmlContent += 	"<item><title>" + item.getTitle() + 
+					if(item.getSource().equals("Youku"))
+						youkuContent += 	"<item><title>" + item.getTitle() + 
 									"</title><keyword>" + item.getKeyWord() +
 									"</keyword><description>" + item.getDescription() +
 									"</description><imageurl>" + item.getImgUrl() +
@@ -140,9 +146,21 @@ public class SearchProcess extends HttpServlet {
 //									"</url><source>" + item.getSource() + 
 //									"</source></item>";
 									"</url></item>";
+					else if(item.getSource().equals("Tudou"))
+						tudouContent += 	"<item><title>" + item.getTitle() + 
+						"</title><keyword>" + item.getKeyWord() +
+						"</keyword><description>" + item.getDescription() +
+						"</description><imageurl>" + item.getImgUrl() +
+						"</imageurl><url>" + item.getUrl() +
+//						"</url><source>" + item.getSource() + 
+//						"</source></item>";
+						"</url></item>";
+
 				}
 			}
-			xmlContent += "</items>";
+			
+			xmlContent += "<youku>" + youkuContent + "</youku><tudou>"
+							+ tudouContent + "</tudou></items>";
 			
 //			outs.writeUTF(xmlContent);
 			bw.write(xmlContent);
