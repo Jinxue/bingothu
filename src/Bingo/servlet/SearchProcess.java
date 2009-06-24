@@ -100,6 +100,12 @@ public class SearchProcess extends HttpServlet {
 		SearchManager searchManager = null;
 		ArrayList<VideoInfo> searchResult = new ArrayList<VideoInfo>();
 		
+		if(searchWord.isEmpty())
+		{
+			// Do something
+			searchWord = "中国";
+		}
+		
 		String xmlContent = new String("<?xml version='1.0' encoding='UTF-8'?>".getBytes(), "UTF-8");
 		String youkuContent = new String();
 		String tudouContent = new String();
