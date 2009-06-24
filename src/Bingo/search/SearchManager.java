@@ -81,6 +81,7 @@ public class SearchManager {
                     resultBean.setUrl(hitDoc.get("url"));
                     resultBean.setImgUrl(hitDoc.get("imgUrl"));
                     resultBean.setDescription(hitDoc.get("description"));
+                    resultBean.setSource(hitDoc.get("source"));
                     searchResult.add(resultBean);
                 }
                 
