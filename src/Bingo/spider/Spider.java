@@ -1,6 +1,7 @@
 package Bingo.spider;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,21 +16,26 @@ import org.htmlparser.util.ParserException;
 import Bingo.index.IndexManager;
 
 public class Spider implements Runnable {
-	LinkedList<String> queue = new LinkedList<String>();
+	
+	static LinkedList<String> queue = new LinkedList<String>();
 
 	Set<String> visitedURL = new HashSet<String>();
 
 	Map<String, String> imgLinkMap = new HashMap<String, String>(); // for temp
 
-	// static LinkedList<VideoInfo> videoInfoList = new LinkedList<VideoInfo>();
-
 	static IndexManager indexManager;
 
 	int linkNum = 0;
+	
+	int count = 100000;
 
 	static HashMap<String, VideoWebsiteFilterInterface> vwFilter;
 
 	Parser parser = new Parser();
+	
+	ArrayList<Thread> threadList = new ArrayList<Thread>();
+	
+	
 
 	public Spider(HashMap<String, VideoWebsiteFilterInterface> vwFilter) {
 		Spider.vwFilter = vwFilter;
@@ -42,8 +48,6 @@ public class Spider implements Runnable {
 
 	public static void main(String[] args) throws Exception {
 
-		// Spider spider = new Spider(); // for youku
-		// Spider spider = new Spider(new TudouFilter()); //for Tudou
 		HashMap<String, VideoWebsiteFilterInterface> vwFilterMap = new HashMap<String, VideoWebsiteFilterInterface>();
 		vwFilterMap.put("Youku", new YoukuFilter());
 		vwFilterMap.put("Tudou", new TudouFilter());
@@ -51,41 +55,150 @@ public class Spider implements Runnable {
 		Spider spider = new Spider(vwFilterMap);
 		indexManager = new IndexManager(
 				"E:\\Eclipse_workespace-jee\\Bingo\\index");
+		
 		// Add the shutdown hook
-		Runtime.getRuntime().addShutdownHook(new ShutDownThread(indexManager));
+		Runtime.getRuntime().addShutdownHook(new ShutDownThread(indexManager));  
 
-		// Thread.sleep(5000);
-		// System.exit(0);
-
+		
+//		System.out.println(spider.getHotVideos());
 		spider.run();
-		indexManager.closeIndex();
+  	    indexManager.closeIndex(); 
 	}
 
+	public static String getNextUrl()
+	{
+		synchronized(queue)
+		{
+			if(queue.size()==0)
+				return null;
+			return queue.removeFirst();
+		}
+	}
+	
+	protected void startDownloadThreads(int num)
+	{
+		for(int i=0;i<num;++i)
+		{
+			Thread downLoaderThread = new Thread(new Downloader());
+			threadList.add(downLoaderThread);
+			
+		    downLoaderThread.start();
+		}
+	}
+	
+	protected void stopDownloadThreads()
+	{
+		for(Thread downloadThread : threadList)
+		{
+			if(downloadThread.getState() != Thread.State.TERMINATED)
+				downloadThread.stop();
+		}
+	}
+	
+	/**
+	 * Store the URLs which has been visited , also the same to the URLs unvisited in the queue  
+	 * 
+	 */
+	protected void storeVisitedData()
+	{
+        		
+	}
+	
+	/**
+	 * Search the hot videos 
+	 * @return
+	 */
+	public Map<String , ArrayList<VideoInfo>> getHotVideos()
+	{
+		Map<String , ArrayList<VideoInfo>> hotVideos = new HashMap<String, ArrayList<VideoInfo>>();
+		
+		for(String source : vwFilter.keySet())
+		{
+			VideoWebsiteFilterInterface filter = vwFilter.get(source);
+			String enterPointUrl = filter.getEnterPointURL();
+			
+//			System.out.println(enterPointUrl);
+			
+			Map<String , String> imgLinkMap ;
+			
+			try {
+				Parser parser = new Parser(enterPointUrl);
+				imgLinkMap = filter.getLinkAndImgLink(enterPointUrl, parser);
+				
+//				System.out.println(imgLinkMap);
+				
+				ArrayList<VideoInfo> videoInfos = new ArrayList<VideoInfo>();
+				
+				parser.reset();
+				for(String url : imgLinkMap.keySet())
+				{
+//					System.out.println(url);
+					parser.setURL(url);
+					
+					String imgUrl = imgLinkMap.get(url);					
+					
+					VideoInfo videoInfo = filter.getVideoInfo(parser, url, imgUrl);
+					videoInfos.add(videoInfo);		
+					System.out.println(videoInfo);
+				}
+				
+				hotVideos.put(source, videoInfos);				
+				
+			} catch (ParserException e) {
+				
+				e.printStackTrace();
+			}
+		}
+		
+		return hotVideos ;
+	}
+	
 	public void run() {
-		int count = 100000;
+		
 		HashMap <String, Double> timeUsed = new HashMap <String, Double>(); 
 		for (String source : vwFilter.keySet()) {
 			VideoWebsiteFilterInterface filter = vwFilter.get(source); 
 			queue.add(filter.getEnterPointURL());
 
+            //--- Start several threads to download web files 
+			startDownloadThreads(6);
+			
 			long begin = System.nanoTime();
-			while ((!queue.isEmpty()) && (linkNum < count)) // We just want to
+			
+			int timeOutNum = 0;
+			while (linkNum < count) // We just want to
 															// exit normally
 			// while(!queue.isEmpty())
 			{
-				String nextLink = (String) queue.removeFirst();
-				// System.out.println(nextLink);
+				String nextLinkPath = Downloader.readHtmlData();
+				if(nextLinkPath == null)
+				{
+					if(timeOutNum < 1000000000)
+					{
+						++timeOutNum;						
+					}
+					else
+						break;
+				}
+				else
+				{
+					// System.out.println(nextLink);
+					timeOutNum = 0;
+					
+					try {
+						parseHtml(filter, nextLinkPath);
+						System.out.println(linkNum);
 
-				try {
-					parseHtml(filter, nextLink);
-					System.out.println(linkNum);
-
-				} catch (CorruptIndexException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
+					} catch (CorruptIndexException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
+
+            stopDownloadThreads();
+			
 			double temp = (System.nanoTime() - begin) / 1000000000.0 ;
 			timeUsed.put(source, new Double(temp));
 			System.out.println("*********************From" + source + " ********************************");
@@ -105,8 +218,14 @@ public class Spider implements Runnable {
 			IOException {
 		try {
 			parser.setURL(url);
-			VideoInfo videoInfo = getMoreInfo(filter, parser, url);
-			getMoreLinks(filter, url, parser);
+			
+//			System.out.println(url);
+			
+			parser.setEncoding("UTF-8");
+			
+			String realURL = Downloader.getUrlFromPath(url);
+			VideoInfo videoInfo = getMoreInfo(filter, parser, realURL);
+			getMoreLinks(filter, realURL, parser);
 
 			if (videoInfo != null) {
 //				 System.out.println("**** video Info : "+
@@ -115,11 +234,10 @@ public class Spider implements Runnable {
 				// Put the index file to indexed DB
 				indexManager.addIndex(videoInfo);
 
-				/*
-				 * synchronized(videoInfoList){ videoInfoList.add(videoInfo); }
-				 */
 				++linkNum;
 			}
+			
+			Downloader.eraseHtmlData(url);
 
 		} catch (ParserException e) {
 			System.out.println(url);
@@ -152,7 +270,10 @@ public class Spider implements Runnable {
 				
 				imgLinkMap.put(link, imgLink);
 				
-				queue.add(link);
+				synchronized(queue)
+				{
+					queue.add(link);
+				}
 			}
 		}
 	}
@@ -173,9 +294,4 @@ public class Spider implements Runnable {
 		return null;
 	}
 
-	/*
-	 * public static VideoInfo getVideoInfo() { synchronized(videoInfoList){
-	 * if(videoInfoList.size()!=0) return videoInfoList.removeFirst(); return
-	 * null; } }
-	 */
 }
