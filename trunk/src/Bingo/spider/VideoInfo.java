@@ -59,4 +59,14 @@ public class VideoInfo {
 	public String getSource() {
 		return source;
 	}
+	
+	public String toXML(){
+		String content = 	"<item><title>" + title + 
+		"</title><keyword>" + keyWord +
+		"</keyword><description>" + description +
+		"</description><imageurl>" + imgUrl +
+		"</imageurl><url>" + url +
+		"</url></item>";
+		return content;
+	}
 }

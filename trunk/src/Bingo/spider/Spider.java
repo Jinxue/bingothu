@@ -35,7 +35,7 @@ public class Spider implements Runnable {
 
 	static int linkNum = 0;
 	
-	int count = 100000;
+	int count = 1000;
 
 	static HashMap<String, VideoWebsiteFilterInterface> vwFilter;
 
@@ -51,7 +51,11 @@ public class Spider implements Runnable {
 
 	public Spider() {
 		// Spider.vwFilter = new YoukuFilter();
-		Spider.vwFilter = null;
+//		Spider.vwFilter = null;
+		HashMap<String, VideoWebsiteFilterInterface> vwFilterMap = new HashMap<String, VideoWebsiteFilterInterface>();
+		vwFilterMap.put("Youku", new YoukuFilter());
+		vwFilterMap.put("Tudou", new TudouFilter());
+		Spider.vwFilter = vwFilterMap;
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -64,7 +68,7 @@ public class Spider implements Runnable {
     	spider.loadVistitedData();  //load the data saved
 		
 		indexManager = new IndexManager(
-				"E:\\Eclipse_workespace-jee\\Bingo\\index");
+				System.getProperty("user.dir") + "\\index");
 		
 		// Add the shutdown hook
 		Runtime.getRuntime().addShutdownHook(new ShutDownThread(indexManager));  
