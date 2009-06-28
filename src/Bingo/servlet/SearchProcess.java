@@ -1,13 +1,20 @@
 package Bingo.servlet;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -18,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import Bingo.index.IndexConstant;
 import Bingo.search.SearchManager;
+import Bingo.spider.Spider;
 import Bingo.spider.VideoInfo;
 
 /**
@@ -25,6 +33,10 @@ import Bingo.spider.VideoInfo;
  */
 public class SearchProcess extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private boolean getHotVideoFinished = false;
+	
+	private String recentHotXML;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -42,15 +54,67 @@ public class SearchProcess extends HttpServlet {
 		// directory = getServletContext().getRealPath("/");
 		// Set the directory for data and index
 		String root = config.getServletContext().getRealPath("/");
-		 
-//		IndexConstant.indexDir = root + config.getInitParameter("indexDir");
-//
-//		IndexConstant.dataDir = root + config.getInitParameter("dataDir");
 
-		IndexConstant.indexDir = "E:\\Eclipse_workespace-jee\\Bingo\\index";
-		IndexConstant.dataDir = "E:\\Eclipse_workespace-jee\\Bingo\\data";
+		IndexConstant.indexDir = root + config.getInitParameter("indexDir");
+		IndexConstant.dataDir = root + config.getInitParameter("dataDir");
+
+//		IndexConstant.indexDir = "E:\\Eclipse_workespace-jee\\Bingo\\index";
+//		IndexConstant.dataDir = "E:\\Eclipse_workespace-jee\\Bingo\\data";
+		
+		recentHotXML = null;
+
+		Timer timer = new Timer();
+		TimerTask tt = new TimerTask() {
+			@Override
+			public void run() {
+				try {
+					getHotVideos();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		timer.schedule(tt, 1, IndexConstant.hotVideoPeriod);
+	}
+	
+	private synchronized void setFlag(boolean flag){
+		getHotVideoFinished = flag;
 	}
 
+	private void getHotVideos() throws IOException{
+		setFlag(false);
+		System.out.println(System.getProperty("user.dir"));
+		File file = new File(IndexConstant.dataDir, "hots.xml");
+		if(file.exists())
+			return;
+		FileOutputStream fos = new FileOutputStream(file);
+		// DataOutputStream outs = new DataOutputStream(
+		// new FileOutputStream(file));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos,
+				"UTF-8"));
+		Spider spider = new Spider();
+		String youkuContent = new String();
+		String tudouContent = new String();
+		String xmlContent = new String();
+		Map<String, ArrayList<VideoInfo>> hotVideos = spider.getHotVideos();
+		// Return the hot videos
+		for (String source : hotVideos.keySet()) {
+			if (source.equals("Youku")) {
+				for (VideoInfo item : hotVideos.get(source))
+					youkuContent += item.toXML();
+			} else if (source.equals("Tudou"))
+				for (VideoInfo item : hotVideos.get(source))
+					tudouContent += item.toXML();
+		}
+		xmlContent += "<youku>" + youkuContent + "</youku><tudou>"
+		+ tudouContent + "</tudou>";
+		bw.write(xmlContent);
+		bw.close();
+		fos.close();
+		recentHotXML = xmlContent;
+		setFlag(true);
+	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
@@ -84,7 +148,7 @@ public class SearchProcess extends HttpServlet {
 				.getRequestDispatcher("search.jsp");
 		dispatcher.forward(request, response);
 	}
-	
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
@@ -92,30 +156,39 @@ public class SearchProcess extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
-//		String searchWord = new String(request.getParameter("searchWord")
-//				.getBytes("ISO-8859-1"), "UTF-8");
-		
+
+		// String searchWord = new String(request.getParameter("searchWord")
+		// .getBytes("ISO-8859-1"), "UTF-8");
+
 		String searchWord = request.getParameter("searchWord");
 		SearchManager searchManager = null;
 		ArrayList<VideoInfo> searchResult = new ArrayList<VideoInfo>();
-		
-		if(searchWord.isEmpty())
-		{
-			// Do something
-			searchWord = "中国";
-		}
-		
-		String xmlContent = new String("<?xml version='1.0' encoding='UTF-8'?>".getBytes(), "UTF-8");
+
+		String xmlContent = new String("<?xml version='1.0' encoding='UTF-8'?>"
+				.getBytes(), "UTF-8");
 		String youkuContent = new String();
 		String tudouContent = new String();
-//		String xmlContent = new String("");
-//		xmlContent += "<?xml version='1.0' encoding='UTF-8'?>";
-		
-        response.setContentType("text/xml;charset=UTF-8");   
-        PrintWriter out = response.getWriter();   
+		response.setContentType("text/xml;charset=UTF-8");
+		PrintWriter out = response.getWriter();
 
-		if (!searchWord.isEmpty()) {
+		// return the data in XML format
+		// Also write it to a file
+
+		xmlContent += "<items>";
+		if (searchWord.isEmpty()) {
+			File file = new File(IndexConstant.dataDir, "hots.xml");
+			if(recentHotXML == null && file.exists()){
+				FileInputStream fis = new FileInputStream(file);
+				BufferedReader br = new BufferedReader(new InputStreamReader(fis,
+					"UTF-8"));
+//				xmlContent += br.toString();
+				String inputLine;
+				while ((inputLine = br.readLine()) != null) {
+					recentHotXML += inputLine;
+				}
+			}
+			xmlContent += recentHotXML;
+		} else {
 			try {
 				searchManager = new SearchManager(searchWord);
 			} catch (Exception e1) {
@@ -129,55 +202,21 @@ public class SearchProcess extends HttpServlet {
 				e.printStackTrace();
 			}
 
-			// return the data in XML format
-			// Also write it to a file
-			System.out.println(System.getProperty("user.dir"));
-			File file = new File(IndexConstant.dataDir, "results.xml");
-			FileOutputStream fos = new FileOutputStream(file);
-//			DataOutputStream outs = new DataOutputStream(
-//		               new FileOutputStream(file));
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8"));   
-			
-			xmlContent += "<items>";
-			
-//			String content = null;
-			if(!searchResult.isEmpty()){
-				for(VideoInfo item: searchResult){
-					if(item.getSource().equals("Youku"))
-						youkuContent += 	"<item><title>" + item.getTitle() + 
-									"</title><keyword>" + item.getKeyWord() +
-									"</keyword><description>" + item.getDescription() +
-									"</description><imageurl>" + item.getImgUrl() +
-									"</imageurl><url>" + item.getUrl() +
-//									"</url><source>" + item.getSource() + 
-//									"</source></item>";
-									"</url></item>";
-					else if(item.getSource().equals("Tudou"))
-						tudouContent += 	"<item><title>" + item.getTitle() + 
-						"</title><keyword>" + item.getKeyWord() +
-						"</keyword><description>" + item.getDescription() +
-						"</description><imageurl>" + item.getImgUrl() +
-						"</imageurl><url>" + item.getUrl() +
-//						"</url><source>" + item.getSource() + 
-//						"</source></item>";
-						"</url></item>";
-
+			// String content = null;
+			if (!searchResult.isEmpty()) {
+				for (VideoInfo item : searchResult) {
+					if (item.getSource().equals("Youku"))
+						youkuContent += item.toXML();
+					else if (item.getSource().equals("Tudou"))
+						tudouContent += item.toXML();
 				}
 			}
-			
 			xmlContent += "<youku>" + youkuContent + "</youku><tudou>"
-							+ tudouContent + "</tudou></items>";
-			
-//			outs.writeUTF(xmlContent);
-			bw.write(xmlContent);
-			
-			out.print(xmlContent);
-			out.flush();
-			out.close();
-			
-//			outs.close();
-			bw.close();
-			fos.close();
+			+ tudouContent + "</tudou>";
 		}
+		xmlContent += "</items>";
+		out.print(xmlContent);
+		out.flush();
+		out.close();
 	}
 }

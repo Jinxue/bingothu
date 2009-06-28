@@ -46,22 +46,22 @@ public class Downloader implements Runnable{
 	public  boolean storeHtmlData(String urlStr)
 	{
 		try {
-			//Êý¾ÝÔ´
+			//ï¿½ï¿½ï¿½Ô´
 			URL url = new URL (urlStr);		
 			
 			URLConnection u = url.openConnection();
 			if(u == null)
 				return false;
 			
-			//»ñÈ¡ÍøÒ³±àÂë¸ñÊ½
+			//ï¿½ï¿½È¡ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½Ê½
 			String contentType = u.getHeaderField("Content-type");	
 			int i = contentType.indexOf("charset=");
 			String encodingType = null;
 			if(i == -1)
 			{
-				if(urlStr.indexOf("tudou") != -1) //ÍÁ¶¹µÄÍøÒ³Ä¬ÈÏÓÃgbk
+				if(urlStr.indexOf("tudou") != -1) //ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½Ò³Ä¬ï¿½ï¿½ï¿½ï¿½gbk
 					encodingType = "GBK";
-				else if(urlStr.indexOf("youku") != -1 || urlStr.indexOf("yokoo")!=-1) //ÓÅ¿áÄ¬ÈÏÓÃutf-8
+				else if(urlStr.indexOf("youku") != -1 || urlStr.indexOf("yokoo")!=-1) //ï¿½Å¿ï¿½Ä¬ï¿½ï¿½ï¿½ï¿½utf-8
 					encodingType = "UTF-8";
 				else
 					return false;
@@ -69,13 +69,13 @@ public class Downloader implements Runnable{
 			else
 			    encodingType = contentType.substring(contentType.indexOf("charset=")+8);
 			
-			System.out.println(encodingType);
+//			System.out.println(encodingType);
 			
 			InputStream in = u.getInputStream();			
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(in,encodingType));
 			
-			//»º³åÎÄ¼þ¼Ð
+			//ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
 			File folder = new File(dataBufferPath); 
 			if(!folder.exists())
 			{
@@ -84,7 +84,7 @@ public class Downloader implements Runnable{
 					return false;
 			}
 			
-			//»º³åÎÄ¼þÃû
+			//ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
 			String tempName = getTempPath(urlStr);	
 			
 			PrintWriter outer = new PrintWriter(
@@ -102,7 +102,7 @@ public class Downloader implements Runnable{
 			br.close();
 //			System.out.println("OK!");
 			
-			//Ìí¼ÓÖÁ»º´æÎÄ¼þÁÐ±íÖÐ
+			//ï¿½ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ð±ï¿½ï¿½ï¿½
 			synchronized(tempHtmlFileName){
 				tempHtmlFileName.put(tempName, urlStr);
 			}

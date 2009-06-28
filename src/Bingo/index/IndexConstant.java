@@ -7,4 +7,6 @@ public class IndexConstant {
 	// The path for data directory
 	static public String dataDir = "data";
 
+	// The period for hot video capture
+	static public int hotVideoPeriod = 60 * 60 * 1000;
 }
