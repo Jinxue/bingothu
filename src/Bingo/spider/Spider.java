@@ -1,6 +1,14 @@
 package Bingo.spider;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,13 +27,13 @@ public class Spider implements Runnable {
 	
 	static LinkedList<String> queue = new LinkedList<String>();
 
-	Set<String> visitedURL = new HashSet<String>();
+	static Set<String> visitedURL = new HashSet<String>();
 
-	Map<String, String> imgLinkMap = new HashMap<String, String>(); // for temp
+	static Map<String, String> imgLinkMap = new HashMap<String, String>(); // for temp
 
 	static IndexManager indexManager;
 
-	int linkNum = 0;
+	static int linkNum = 0;
 	
 	int count = 100000;
 
@@ -53,16 +61,20 @@ public class Spider implements Runnable {
 		vwFilterMap.put("Tudou", new TudouFilter());
 
 		Spider spider = new Spider(vwFilterMap);
+    	spider.loadVistitedData();  //load the data saved
+		
 		indexManager = new IndexManager(
 				"E:\\Eclipse_workespace-jee\\Bingo\\index");
 		
 		// Add the shutdown hook
 		Runtime.getRuntime().addShutdownHook(new ShutDownThread(indexManager));  
+		Runtime.getRuntime().addShutdownHook(new SaveVisitedDataThread(spider));  
 
 		
-//		System.out.println(spider.getHotVideos());
 		spider.run();
-  	    indexManager.closeIndex(); 
+	    indexManager.closeIndex();  
+		
+		
 	}
 
 	public static String getNextUrl()
@@ -101,8 +113,112 @@ public class Spider implements Runnable {
 	 */
 	protected void storeVisitedData()
 	{
-        		
+        String fileQueueName = "queue.save";	
+        String fileVisitedUrlName = "visitedURL.save";
+        String fileImgLinkName = "imgLink.save";
+        
+        
+        try {
+			PrintWriter outerQueue = new PrintWriter(
+									        new BufferedWriter(
+									        	new OutputStreamWriter(
+									        			new FileOutputStream(fileQueueName))));
+//			outerQueue.println(queue.size());
+			for(String s : queue)
+			{
+	//			outerQueue.write(s);				
+				outerQueue.println(s);
+			}
+			outerQueue.flush();
+			
+			PrintWriter outerVisitedURL = new PrintWriter(
+										        new BufferedWriter(
+										        	new OutputStreamWriter(
+										        			new FileOutputStream(fileVisitedUrlName))));
+//			outerVisitedURL.println(visitedURL.size());
+			outerVisitedURL.println(Integer.toString(linkNum));
+			for(String s : visitedURL)
+			{
+	//			outerVisitedURL.write(s);
+				outerVisitedURL.println(s);
+			}
+			outerVisitedURL.flush();
+			
+			PrintWriter outerImgLink = new PrintWriter(
+									        new BufferedWriter(
+									        	new OutputStreamWriter(
+									        			new FileOutputStream(fileImgLinkName))));
+			
+//			outerImgLink.println(imgLinkMap.size());
+			for(String s : imgLinkMap.keySet())
+			{
+	//			outerImgLink.write(s+"@"+imgLinkMap.get(s));
+				outerImgLink.println(s+"@"+imgLinkMap.get(s));
+			}
+			outerImgLink.flush();
+			
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
+	
+	/**
+	 * Load the data stored before
+	 * 
+	 */
+	protected void loadVistitedData()
+	{
+		String fileQueueName = "queue.save";	
+        String fileVisitedUrlName = "visitedURL.save";
+        String fileImgLinkName = "imgLink.save";
+        
+        try {
+/*	        File fileQueue = new File(fileQueueName);
+	        if(fileQueue.exists())
+	        {
+	        	BufferedReader bfQueue = new BufferedReader(new FileReader(fileQueue));
+	        	String line = bfQueue.readLine();
+	        	while((line=bfQueue.readLine())!=null)
+	        		queue.add(line);
+	        } */
+	        
+	        File fileVisitedURL = new File(fileVisitedUrlName);
+	        if(fileVisitedURL.exists())
+	        {
+	        	BufferedReader bfVisitedURL = new BufferedReader(new FileReader(fileVisitedURL));
+//	        	bfVisitedURL.readLine();
+	        	
+	        	String linkNumStr = bfVisitedURL.readLine();
+	        	linkNum = Integer.parseInt(linkNumStr);
+	        	String line;
+	        	while((line=bfVisitedURL.readLine())!=null)
+	        		visitedURL.add(line);
+	        }
+	        
+	        File fileImgLink = new File(fileImgLinkName);
+	        if(fileImgLink.exists())
+	        {
+	        	BufferedReader bfImgLink = new BufferedReader(new FileReader(fileImgLink));
+	        	String line ;
+	        	while((line=bfImgLink.readLine())!=null)
+	        	{
+	        		String source = line.substring(0,line.indexOf('@'));
+	        		queue.add(source);
+	        		
+	        		String dest = line.substring(line.indexOf('@')+1) ;
+	        		imgLinkMap.put(source, dest);
+	        	}
+	        }
+	        
+	        
+        }catch (FileNotFoundException e) {
+			e.printStackTrace();
+        }
+        catch(IOException e){
+        	e.printStackTrace();
+        }        
+	} 
 	
 	/**
 	 * Search the hot videos 
@@ -158,18 +274,16 @@ public class Spider implements Runnable {
 		HashMap <String, Double> timeUsed = new HashMap <String, Double>(); 
 		for (String source : vwFilter.keySet()) {
 			VideoWebsiteFilterInterface filter = vwFilter.get(source); 
-			queue.add(filter.getEnterPointURL());
+			queue.add(filter.getEnterPointURL());			
 
-            //--- Start several threads to download web files 
-			startDownloadThreads(6);
+			//--- Start several threads to download web files 
+			startDownloadThreads(5);
 			
-			long begin = System.nanoTime();
+            long begin = System.nanoTime();
 			
 			int timeOutNum = 0;
-			while (linkNum < count) // We just want to
-															// exit normally
-			// while(!queue.isEmpty())
-			{
+			while (linkNum < count) // We just want to exit normally			
+			{				
 				String nextLinkPath = Downloader.readHtmlData();
 				if(nextLinkPath == null)
 				{
