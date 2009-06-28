@@ -4,17 +4,19 @@ import java.io.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.net.URLConnection;
 
-import org.apache.lucene.index.CorruptIndexException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Random;
 
 
 public class Downloader implements Runnable{
 	
 	static String dataBufferPath = "E:\\htmlBuffer";
 	
-	static LinkedList<String> tempHtmlFileName = new LinkedList<String>();
+	static Map<String,String> tempHtmlFileName = new HashMap<String , String>();
 	
 	public void run(){
 		int timeOutNum = 0;
@@ -41,14 +43,37 @@ public class Downloader implements Runnable{
 		}
 	}
 
-	public static boolean storeHtmlData(String urlStr)
+	public  boolean storeHtmlData(String urlStr)
 	{
 		try {
 			//数据源
-			URL url = new URL (urlStr);
-			InputStream in = url.openStream();
-//			in = new BufferedInputStream(in);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+			URL url = new URL (urlStr);		
+			
+			URLConnection u = url.openConnection();
+			if(u == null)
+				return false;
+			
+			//获取网页编码格式
+			String contentType = u.getHeaderField("Content-type");	
+			int i = contentType.indexOf("charset=");
+			String encodingType = null;
+			if(i == -1)
+			{
+				if(urlStr.indexOf("tudou") != -1) //土豆的网页默认用gbk
+					encodingType = "GBK";
+				else if(urlStr.indexOf("youku") != -1 || urlStr.indexOf("yokoo")!=-1) //优酷默认用utf-8
+					encodingType = "UTF-8";
+				else
+					return false;
+			}
+			else
+			    encodingType = contentType.substring(contentType.indexOf("charset=")+8);
+			
+			System.out.println(encodingType);
+			
+			InputStream in = u.getInputStream();			
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(in,encodingType));
 			
 			//缓冲文件夹
 			File folder = new File(dataBufferPath); 
@@ -63,13 +88,13 @@ public class Downloader implements Runnable{
 			String tempName = getTempPath(urlStr);	
 			
 			PrintWriter outer = new PrintWriter(
-		//			                new BufferedWriter(
+					                new BufferedWriter(
 					                	new OutputStreamWriter(
-					                			new FileOutputStream(tempName),"UTF-8"));			
+					                			new FileOutputStream(tempName),encodingType)));			
 			String line ;
 			while((line=br.readLine())!=null)
 			{
-	//			System.out.println(line);
+//				System.out.println(line);
 				outer.write(line);
 			}
 			outer.flush();
@@ -79,18 +104,30 @@ public class Downloader implements Runnable{
 			
 			//添加至缓存文件列表中
 			synchronized(tempHtmlFileName){
-				tempHtmlFileName.add(tempName);
+				tempHtmlFileName.put(tempName, urlStr);
 			}
 //			System.out.println("finish download url :"+urlStr);
 			
 			
 		} catch (MalformedURLException e) {
+			System.err.println(urlStr);
+			
 			e.printStackTrace();
 			return false;
 		} catch (IOException e) {
+			System.err.println(urlStr);
+			
 			e.printStackTrace();
 			return false;
+		} catch(Exception e){
+			System.err.println(urlStr);
+			
+            e.printStackTrace();			
+			
+			return false;
 		}
+		
+		
 		return true;
 	}
 	
@@ -104,44 +141,73 @@ public class Downloader implements Runnable{
 			if(tempHtmlFileName.size()==0)
 				return null;
 			else
-				return tempHtmlFileName.removeFirst();
+			{
+			    for(String s : tempHtmlFileName.keySet())
+			    {			    	
+			    	return s ;
+			    }
+			}
 		}
+		return null;
 	}
 	
 	public static boolean eraseHtmlData(String tempPath)
 	{
+		tempHtmlFileName.remove(tempPath);
 		return new File(tempPath).delete();
 	}
 	
 	public static String getTempPath(String urlStr)
 	{
-		String tempName = urlStr.replace(':', '~');
+/*		String tempName = urlStr.replace(':', '~');
 		tempName = tempName.replace('/', '$');
-		tempName = dataBufferPath+"\\"+tempName+".txt";	
+		tempName = dataBufferPath+"\\"+tempName+".txt";	 */
+		String fileName = dataBufferPath+"\\"+getRandomString(8)+".txt";
+		while(tempHtmlFileName.containsKey(fileName))
+			fileName = dataBufferPath+"\\"+getRandomString(8)+".txt";
 		
-		return tempName;
+		
+//		tempHtmlFileName.put(fileName, urlStr);
+		
+		return fileName;
 	}
 	
 	public static String getUrlFromPath(String pathStr)
 	{
-		String url = pathStr.substring(pathStr.lastIndexOf('\\')+1 , pathStr.lastIndexOf('.'));
+/*		String url = pathStr.substring(pathStr.lastIndexOf('\\')+1 , pathStr.lastIndexOf('.'));
 		url = url.replace('~', ':');
 		url = url.replace('$', '/');
-		return url;
+		return url;  */
+		return tempHtmlFileName.get(pathStr);
+	}
+	
+	protected static String getRandomString (int len)
+	{
+		String strTable = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		
+		char [] buf = new char[len];
+		Random random = new Random();
+		
+		for(int i =0 ;i<len ; ++i)
+		{
+			buf[i]= strTable.charAt(random.nextInt(strTable.length()-1));
+		}
+		
+		return new String(buf);
 	}
 	
 	public static void main(String [] args){
-		Downloader.storeHtmlData("http://v.youku.com/v_show/id_XNTkzMjY4NDQ=.html");
+		new Downloader().storeHtmlData("http://www.tudou.com/playlist/id/6260180/");
 //		System.out.println(eraseHtmlData(readHtmlData()));
 		
 //		Spider spider = new Spider();
 //		VideoWebsiteFilterInterface youkuFilter = new YoukuFilter();
 		
 		
-		String url = readHtmlData();
+		/*		String url = readHtmlData();
 		System.out.println(url);
 		System.out.println(getUrlFromPath(url));
-/*	    try {
+	    try {
 	    	
 			spider.parseHtml(youkuFilter, url);
 			
@@ -150,6 +216,27 @@ public class Downloader implements Runnable{
 		} catch (IOException e) {
 			System.out.println(url);
 			
+			e.printStackTrace();
+		}
+		URL url;
+		try {
+			url = new URL("http://www.tudou.com/");
+			try {
+				URLConnection c = url.openConnection();
+				
+				System.out.println(c.getHeaderField("Content-type"));
+				System.out.println(c.getContentType());
+				System.out.println(c.getContentEncoding());
+				
+				System.out.println(c.getHeaderField("Content-type").indexOf("charset="));
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
 		
