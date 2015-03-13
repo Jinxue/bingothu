@@ -1,0 +1,1 @@
+A typical video  retrieval and searching system built on Lucene, the famous full-text retrieval project by Apache.
